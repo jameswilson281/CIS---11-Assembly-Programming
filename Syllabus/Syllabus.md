@@ -34,7 +34,6 @@ An introduction to microprocessor architecture and assembly language programming
 - **Write and execute programs in assembly language (utilizing application programming interfaces) illustrating typical mathematic and business applications.
 
  |
-| --- |
 
 **TEXTBOOK REQUIREMENTS:**
 
