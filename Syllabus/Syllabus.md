@@ -39,6 +39,9 @@ An introduction to microprocessor architecture and assembly language programming
 
 Irving, Kip R., _Assembly Language for x86 Processors_ - 7th Edition. Prentice Hall.
 
+**NOTICE**
+An electronic rental copy of the textbook is available through https://www.vitalsource.com/ for $38.00
+
 **COURSE POLICIES**
 
 - Course assignments will be done electronically and submitted via GitHub.  I will provide a tutorial on the first day of class.
