@@ -14,7 +14,7 @@ A college of the Riverside Community College District
 
 **Office/Phone: N/A                Office Hours: N/A
 
-**Class Hours: TBD  Class Location: TBD
+**Class Hours: Mondays and Wednesdays 10:15am - 12:20pm  Class Location: ATEC 118
 
 **Section Code:   34595            **
 
