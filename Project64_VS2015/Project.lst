@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler (x64) Version 14.00.23506.0   02/26/18 11:50:32
+Microsoft (R) Macro Assembler (x64) Version 14.00.23506.0   03/05/18 11:03:54
 main.asm						     Page 1 - 1
 
 
@@ -10,16 +10,17 @@ main.asm						     Page 1 - 1
 	   0000000000000000
  00000000			.code
  00000000			main proc
-				   ;mov  rax,5
- 00000000  48/ 83 C0 06		   add  rax,6
- 00000004  48/ 89 05		   mov  sum,rax
-	   00000000 R
-
- 0000000B  B9 00000000		   mov  ecx,0
+ 00000000  B8 00000005		   mov  eax,5
+ 00000005  BB 00000006		   mov  ebx,6   
+				   ;
+ 0000000A  8B C8		   mov  ecx,eax
+ 0000000C  8B C3		   mov  eax,ebx
+ 0000000E  8B D9		   mov  ebx,ecx
+				   ;
  00000010  E8 00000000 E	   call ExitProcess
  00000015			main endp
 				end
-Microsoft (R) Macro Assembler (x64) Version 14.00.23506.0   02/26/18 11:50:32
+Microsoft (R) Macro Assembler (x64) Version 14.00.23506.0   03/05/18 11:03:54
 main.asm						     Symbols 2 - 1
 
 

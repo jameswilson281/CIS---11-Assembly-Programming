@@ -5,11 +5,13 @@ ExitProcess proto
 sum qword 0
 .code
 main proc
-   ;mov  rax,5
-   add  rax,6
-   mov  sum,rax
-
-   mov  ecx,0
+   mov  eax,5
+   mov  ebx,6   
+   ;
+   mov  ecx,eax
+   mov  eax,ebx
+   mov  ebx,ecx
+   ;
    call ExitProcess
 main endp
 end
