@@ -10,7 +10,7 @@ Due 2 Weeks before the final day of classes
     - [ ] Upload your assignment to GitHub
     - [ ] Email james.wilson@rccd.edu with the url to the source code on GitHub	
 	
-	***  23 points (13 for the first 13 questions and 10 for 4.10 ***
+	***  23 points (13 for the first 13 questions and 10 for 4.10) ***
 	
 	
 	
