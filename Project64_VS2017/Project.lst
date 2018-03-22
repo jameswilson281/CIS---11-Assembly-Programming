@@ -1,0 +1,84 @@
+Microsoft (R) Macro Assembler (x64) Version 14.13.26129.0   03/22/18 12:18:00
+..\Irvine\ch05\64 bit\TestRandom.asm			     Page 1 - 1
+
+
+				; 5.9 Question 7 (Not really)
+				; Asks how many random numbers to display and then displays.
+				ExitProcess 		proto
+				ReadInt64		proto
+				WriteString		proto
+				Random64		proto
+				Crlf			proto
+				WriteInt64		proto
+ 00000000			.data
+ 00000000				myRand QWORD 0
+	   0000000000000000
+ 00000008 48 6F 77 20 6D		askForInput BYTE "How many random numbers do you want to display?",0
+	   61 6E 79 20 72
+	   61 6E 64 6F 6D
+	   20 6E 75 6D 62
+	   65 72 73 20 64
+	   6F 20 79 6F 75
+	   20 77 61 6E 74
+	   20 74 6F 20 64
+	   69 73 70 6C 61
+	   79 3F 00
+ 00000000			.code
+ 00000000			main proc
+ 00000000  E8 0000000A			call Fib
+ 00000005  E8 00000000 E		call ReadInt64
+ 0000000A  E8 00000000 E		call  ExitProcess
+ 0000000F			main endp
+
+ 0000000F			Fib proc USES rax rbx rcx rdx	;sets the loop counter from value in rax
+ 00000013  48/ 8B C8			mov rcx,rax
+ 00000016  48/ C7 C0			mov rax,1
+	   00000001
+ 0000001D  48/ C7 C3			mov rbx,0
+	   00000000
+ 00000024  48/ C7 C2			mov rdx,0
+	   00000000
+ 0000002B			L1:
+ 0000002B  48/ 03 C3			ADD rax,rbx					;fib number stored in rax
+ 0000002E  48/ 03 C2			ADD rax,rdx					;rbx is previous number
+					;call WriteInt64		
+ 00000031  48/ 8B D3			MOV rdx,rbx					;rdx is 2nd previous number
+ 00000034  48/ 8B D8			MOV rbx,rax
+ 00000037  48/ C7 C0			mov rax,0
+	   00000000
+ 0000003E  E8 00000000 E		call WriteInt64
+ 00000043  E2 E6			loop L1
+					
+ 00000045			Fib endp
+..\Irvine\ch05\64 bit\TestRandom.asm(34) : warning A6001:no return from procedure
+				end
+Microsoft (R) Macro Assembler (x64) Version 14.13.26129.0   03/22/18 12:18:00
+..\Irvine\ch05\64 bit\TestRandom.asm			     Symbols 2 - 1
+
+
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+Crlf . . . . . . . . . . . . . .	P 	 00000000 Length= 00000000 External
+ExitProcess  . . . . . . . . . .	P 	 00000000 Length= 00000000 External
+Fib  . . . . . . . . . . . . . .	P 	 0000000F _TEXT	Length= 00000036 Public
+  L1 . . . . . . . . . . . . . .	L 	 0000002B _TEXT	
+Random64 . . . . . . . . . . . .	P 	 00000000 Length= 00000000 External
+ReadInt64  . . . . . . . . . . .	P 	 00000000 Length= 00000000 External
+WriteInt64 . . . . . . . . . . .	P 	 00000000 Length= 00000000 External
+WriteString  . . . . . . . . . .	P 	 00000000 Length= 00000000 External
+main . . . . . . . . . . . . . .	P 	 00000000 _TEXT	Length= 0000000F Public
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+askForInput  . . . . . . . . . .	Byte	 00000008 _DATA	
+myRand . . . . . . . . . . . . .	QWord	 00000000 _DATA	
+
+	   1 Warnings
+	   0 Errors
