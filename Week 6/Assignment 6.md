@@ -1,4 +1,4 @@
-# CIS 11 - Computer Architecture - Assignment 5
+# CIS 11 - Computer Architecture - Assignment 6
 Due 2 Weeks before the final day of classes
 
     - [ ] 5.9 Programming Exercises, Questions 10   

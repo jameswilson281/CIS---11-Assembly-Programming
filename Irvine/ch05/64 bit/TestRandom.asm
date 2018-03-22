@@ -1,35 +1,17 @@
-; 5.9 Question 7 (Not really)
-; Asks how many random numbers to display and then displays.
-ExitProcess 		proto
-ReadInt64		proto
-WriteString		proto
-Random64		proto
-Crlf			proto
-WriteInt64		proto
+;4.10.7 reverse a string
+ExitProcess proto
 .data
-	myRand QWORD 0
-	askForInput BYTE "How many random numbers do you want to display?",0
+	source BYTE "This is the source string",0
+	target BYTE SIZEOF source DUP('#')
 .code
 main proc
-	call Fib
-	call ReadInt64
-	call  ExitProcess
+	mov rcx, SIZEOF source
+	mov rdx, 0
+	L1:
+		mov al, [source + rcx - 1]
+		mov [target + rdx], al
+		inc rdx
+	LOOP L1
+	call ExitProcess
 main endp
-
-Fib proc USES rax rbx rcx rdx	;sets the loop counter from value in rax
-	mov rcx,rax
-	mov rax,1
-	mov rbx,0
-	mov rdx,0
-L1:
-	ADD rax,rbx					;fib number stored in rax
-	ADD rax,rdx					;rbx is previous number
-	;call WriteInt64		
-	MOV rdx,rbx					;rdx is 2nd previous number
-	MOV rbx,rax
-	mov rax,0
-	call WriteInt64
-	loop L1
-	
-Fib endp
 end
