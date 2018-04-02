@@ -1,54 +1,338 @@
-Microsoft (R) Macro Assembler (x64) Version 14.13.26129.0   03/22/18 13:34:39
+Microsoft (R) Macro Assembler (x64) Version 14.13.26129.0   04/01/18 19:48:00
 ..\Irvine\ch05\64 bit\TestRandom.asm			     Page 1 - 1
 
 
-				;4.10.7 reverse a string
-				ExitProcess proto
- 00000000			.data
- 00000000 54 68 69 73 20		source BYTE "This is the source string",0
-	   69 73 20 74 68
-	   65 20 73 6F 75
-	   72 63 65 20 73
-	   74 72 69 6E 67
-	   00
- 0000001A  0000001A [			target BYTE SIZEOF source DUP('#')
-	    23
-	   ]
+				;A small program that calculates and prints terms of the Fibonacci series
  00000000			.code
- 00000000			main proc
- 00000000  48/ C7 C1			mov rcx, SIZEOF source
-	   0000001A
- 00000007  48/ C7 C2			mov rdx, 0
-	   00000000
- 0000000E				L1:
- 0000000E  8A 81 FFFFFFFF R			mov al, [source + rcx - 1]
- 00000014  88 82 0000001A R			mov [target + rdx], al
- 0000001A  48/ FF C2				inc rdx
- 0000001D  E2 EF			LOOP L1
- 0000001F  E8 00000000 E		call ExitProcess
- 00000024			main endp
-				end
-Microsoft (R) Macro Assembler (x64) Version 14.13.26129.0   03/22/18 13:34:39
+				; fibo.asm
+				; assemble using nasm:   
+				; nasm -o fibo.com -f bin fibo.asm
+				;
+				;****************************************************************************
+				; Alterable Constant
+				;****************************************************************************
+				; You can adjust this upward but the upper limit is around 150000 terms.
+				; the limitation is due to the fact that we can only address 64K of memory
+				; in a DOS com file, and the program is about 211 bytes long and the 
+				; address space starts at 100h.  So that leaves roughly 65000 bytes to
+				; be shared by the two terms (num1 and num2 at the end of this file).  Since
+				; they're of equal size, that's about 32500 bytes each, and the 150000th
+				; term of the Fibonacci sequence is 31349 digits long. 
+				; 
+ = 00003A98				maxTerms    equ 15000	; number of terms of the series to calculate
+
+				;****************************************************************************
+				; Number digits to use.  This is based on a little bit of tricky math.
+				; One way to calculate F(n) (i.e. the nth term of the Fibonacci seeries)
+				; is to use the equation int(phi^n/sqrt(5)) where ^ means exponentiation
+				; and phi = (1 + sqrt(5))/2, the "golden number" which is a constant about 
+				; equal to 1.618.  To get the number of decimal digits, we just take the 
+				; base ten log of this number.  We can very easily see how to get the 
+				; base phi log of F(n) -- it's just n*lp(phi)+lp(sqrt(5)), where lp means 
+				; a base phi log.  To get the base ten log of this we just divide by the 
+				; base ten log of phi.  If we work through all that math, we get:
+				;
+				; digits = terms * log(phi) + log(sqrt(5))/log(phi)
+				;
+				; the constants below are slightly high to assure that we always have 
+				; enough room.  As mentioned above the 150000th term has 31349 digits,
+				; but this formula gives 31351.  Not too much waste there, but I'd be
+				; a little concerned about the stack!
+				;
+ = 00000C40			        digits	    equ (maxTerms*209+1673)/1000	
+
+				; this is just the number of digits for the term counter
+ = 00000006				cntDigits   equ 6	; number of digits for counter
+
+				        org     100h            ; this is a DOS com file
+				;****************************************************************************
+				;****************************************************************************
+ 00000100			.code
+ 00000100			main:	
+				; initializes the two numbers and the counter.  Note that this assumes
+				; that the counter and num1 and num2 areas are contiguous!
+				;
+ 00000100  66| B8 3030			mov	ax,'00'		; initialize to all ASCII zeroes
+					mov	di,counter		; including the counter
+..\Irvine\ch05\64 bit\TestRandom.asm(52) : error A2024:invalid operand size for instruction
+ 00000104  66| B9 0C43			mov	cx,digits+cntDigits/2	; two bytes at a time
+ 00000108  FC				cld			; initialize from low to high memory
+ 00000109  F3/ 66| AB			rep	stosw		; write the data
+ 0000010C  66| FF C0			inc	ax		; make sure ASCII zero is in al
+					mov	[num1 + digits - 1],al ; last digit is one
+..\Irvine\ch05\64 bit\TestRandom.asm(57) : error A2001:immediate operand not allowed
+					mov	[num2 + digits - 1],al ; 
+..\Irvine\ch05\64 bit\TestRandom.asm(58) : error A2001:immediate operand not allowed
+					mov	[counter + cntDigits - 1],al
+..\Irvine\ch05\64 bit\TestRandom.asm(59) : error A2001:immediate operand not allowed
+
+					jmp	.bottom		; done with initialization, so begin
+..\Irvine\ch05\64 bit\TestRandom.asm(61) : error A2006:undefined symbol : bottom
+
+				.top
+..\Irvine\ch05\64 bit\TestRandom.asm(63) : error A2008:syntax error : .
+					; add num1 to num2
+					mov	di,num1+digits-1
+..\Irvine\ch05\64 bit\TestRandom.asm(65) : error A2024:invalid operand size for instruction
+					mov	si,num2+digits-1
+..\Irvine\ch05\64 bit\TestRandom.asm(66) : error A2024:invalid operand size for instruction
+ 0000010F  66| B9 0C40			mov	cx,digits	; 
+ 00000113  E8 0000012C			call	AddNumbers	; num2 += num1
+					mov	bp,num2		;
+..\Irvine\ch05\64 bit\TestRandom.asm(69) : error A2024:invalid operand size for instruction
+ 00000118  E8 000000BA			call	PrintLine	;
+					dec	dword [term]	; decrement loop counter
+..\Irvine\ch05\64 bit\TestRandom.asm(71) : error A2009:syntax error in expression
+					jz	.done		;
+..\Irvine\ch05\64 bit\TestRandom.asm(72) : error A2006:undefined symbol : done
+
+					; add num2 to num1
+					mov	di,num2+digits-1
+..\Irvine\ch05\64 bit\TestRandom.asm(75) : error A2024:invalid operand size for instruction
+					mov	si,num1+digits-1
+..\Irvine\ch05\64 bit\TestRandom.asm(76) : error A2024:invalid operand size for instruction
+ 0000011D  66| B9 0C40			mov	cx,digits	;
+ 00000121  E8 0000011E			call	AddNumbers	; num1 += num2
+				.bottom
+..\Irvine\ch05\64 bit\TestRandom.asm(79) : error A2008:syntax error : .
+					mov	bp,num1		;
+..\Irvine\ch05\64 bit\TestRandom.asm(80) : error A2024:invalid operand size for instruction
+ 00000126  E8 000000AC			call	PrintLine	;
+					dec	dword [term]	; decrement loop counter
+..\Irvine\ch05\64 bit\TestRandom.asm(82) : error A2009:syntax error in expression
+					jnz	.top		;
+..\Irvine\ch05\64 bit\TestRandom.asm(83) : error A2006:undefined symbol : top
+				.done
+..\Irvine\ch05\64 bit\TestRandom.asm(84) : error A2008:syntax error : .
+ 0000012B  E8 00000181			call	CRLF		; finish off with CRLF
+ 00000130  66| B8 4C00			mov	ax,4c00h	; terminate
+ 00000134  CD 21			int	21h		;
+
+
+				;****************************************************************************
+				;
+				; PrintLine
+				; prints a single line of output containing one term of the 
+				; Fibonacci sequence.  The first few lines look like this:
+				;
+				; Fibonacci(1): 1
+				; Fibonacci(2): 1
+				; Fibonacci(3): 2
+				; Fibonacci(4): 3
+				;
+				; INPUT:     ds:bp ==> number string, cx = max string length
+				; OUTPUT:    CF set on error, AX = error code if carry set
+				; DESTROYED: ax, bx, cx, dx, di
+				;
+				;****************************************************************************
+ 000001D7			PrintLine:
+					mov	dx,eol		; print combined CRLF and msg1
+..\Irvine\ch05\64 bit\TestRandom.asm(107) : error A2022:instruction operands must be the same size
+					mov	cx,msg1len+eollen   ; 
+..\Irvine\ch05\64 bit\TestRandom.asm(108) : error A2024:invalid operand size for instruction
+ 000001D7  E8 0000005F			call	PrintString	;
+
+					mov	di,counter	; print counter
+..\Irvine\ch05\64 bit\TestRandom.asm(111) : error A2024:invalid operand size for instruction
+ 000001DC  66| B9 0006			mov	cx,cntDigits	;
+ 000001E0  E8 00000048			call	PrintNumericString
+
+ 000001E5  E8 00000092			call	IncrementCount	; also increment the counter
+
+					mov	dx,msg2		; print msg2
+..\Irvine\ch05\64 bit\TestRandom.asm(117) : error A2022:instruction operands must be the same size
+					mov	cx,msg2len	;
+..\Irvine\ch05\64 bit\TestRandom.asm(118) : error A2024:invalid operand size for instruction
+ 000001EA  E8 0000004C			call	PrintString	;
+					
+ 000001EF  66| 8B FD			mov	di,bp		; recall address of number
+ 000001F2  66| B9 0C40			mov	cx,digits	;
+					; deliberately fall through to PrintNumericString
+
+				;****************************************************************************
+				;
+				; PrintNumericString 
+				; prints the numeric string at DS:DI, suppressing leading zeroes
+				; max length is CX
+				;
+				; INPUT:     ds:di ==> number string, cx = max string length
+				; OUTPUT:    CF set on error, AX = error code if carry set
+				; DESTROYED: ax, bx, cx, dx, di
+				;
+				;****************************************************************************
+ 0000022D			PrintNumericString:
+					; first scan for the first non-zero byte
+ 0000022D  B0 30			mov	al,'0'		; look for ASCII zero
+ 0000022F  FC				cld			; scan from MSD to LSD
+ 00000230  F3/ AE			repe	scasb		;
+ 00000232  66| 8B D7			mov	dx,di		; points to one byte after
+ 00000235  66| FF CA			dec	dx		; back up one character
+ 00000238  66| FF C1			inc	cx		;
+					; deliberately fall through to PrintString
+
+				;****************************************************************************
+				; 
+				; PrintString 
+				; prints the string at DS:DX with length CX to stdout
+				;
+				; INPUT:     ds:dx ==> string, cx = string length
+				; OUTPUT:    CF set on error, AX = error code if carry set
+				; DESTROYED: ax, bx
+				;
+				;****************************************************************************
+ 0000023B			PrintString:
+ 0000023B  66| BB 0001			mov	bx, 1		; write to stdout
+ 0000023F  B4 40			mov     ah, 040h        ; write to file handle
+ 00000241  CD 21			int	21h		; ignore return value
+ 00000243  C3				ret			;
+
+				;****************************************************************************
+				;
+				; AddNumbers
+				; add number 2 at ds:si to number 1 at es:di of width cx
+				; 
+				;
+				; INPUT:     es:di ==> number1, ds:si ==> number2, cx= max width
+				; OUTPUT:    CF set on overflow
+				; DESTROYED: ax, si, di
+				;
+				;****************************************************************************
+ 00000244			AddNumbers:
+ 00000244  FD				std			; go from LSB to MSB
+ 00000245  F8				clc			;
+ 00000246  66| 9C			pushf			; save carry flag
+				.top
+..\Irvine\ch05\64 bit\TestRandom.asm(177) : error A2008:syntax error : .
+ 00000248  66| B8 0F0F			mov	ax,0f0fh	; convert from ASCII BCD to BCD
+					and  	al,[si]		; get next digit of number2 in al
+..\Irvine\ch05\64 bit\TestRandom.asm(179) : error A2031:must be index or base register
+					and	ah,[di]		; get next digit of number1 in ah
+..\Irvine\ch05\64 bit\TestRandom.asm(180) : error A2031:must be index or base register
+ 0000024C  66| 9D			popf			; recall carry flag
+ 0000024E  12 C4			adc	al,ah		; add these digits
+					aaa			; convert to BCD
+..\Irvine\ch05\64 bit\TestRandom.asm(183) : error A2008:syntax error : aaa
+ 00000250  66| 9C			pushf			;
+ 00000252  04 30			add	al,'0'		; convert back to ASCII BCD digit
+ 00000254  AA				stosb			; save it and increment both counters
+ 00000255  66| FF CE			dec	si		;
+					loop	.top		; keep going until we've got them all
+..\Irvine\ch05\64 bit\TestRandom.asm(188) : error A2006:undefined symbol : top
+ 00000258  66| 9D			popf			; recall carry flag
+ 0000025A  C3				ret			;
+
+				;****************************************************************************
+				; 
+				; IncrementCount
+				; increments a multidigit term counter by one
+				;
+				; INPUT:     none
+				; OUTPUT:    CF set on overflow
+				; DESTROYED: ax, cx, di
+				;
+				;****************************************************************************
+ 0000027C			IncrementCount:
+ 0000027C  66| B9 0006			mov	cx,cntDigits	;
+					mov	di,counter+cntDigits-1
+..\Irvine\ch05\64 bit\TestRandom.asm(204) : error A2024:invalid operand size for instruction
+ 00000280  FD				std			; go from LSB to MSB
+ 00000281  F9				stc			; this is our increment
+ 00000282  66| 9C			pushf			; save carry flag
+				.top
+..\Irvine\ch05\64 bit\TestRandom.asm(208) : error A2008:syntax error : .
+ 00000284  66| B8 000F			mov	ax,000fh	; convert from ASCII BCD to BCD
+					and	al,[di]		; get next digit of counter in al
+..\Irvine\ch05\64 bit\TestRandom.asm(210) : error A2031:must be index or base register
+ 00000288  66| 9D			popf			; recall carry flag
+ 0000028A  12 C4			adc	al,ah		; add these digits
+					aaa			; convert to BCD
+..\Irvine\ch05\64 bit\TestRandom.asm(213) : error A2008:syntax error : aaa
+ 0000028C  66| 9C			pushf			;
+ 0000028E  04 30			add	al,'0'		; convert back to ASCII BCD digit
+ 00000290  AA				stosb			; save and increment counter
+					loop	.top		;
+..\Irvine\ch05\64 bit\TestRandom.asm(217) : error A2006:undefined symbol : top
+ 00000291  66| 9D			popf			; recall carry flag
+ 00000293  C3				ret			;
+					
+				;****************************************************************************
+				;
+				; CRLF
+				; prints carriage return, line feed pair to stdout
+				;
+				; INPUT:     none
+				; OUTPUT:    CF set on error, AX = error code if carry set
+				; DESTROYED: ax, bx, cx, dx
+				;
+				;****************************************************************************
+ 000002B1			CRLF:	mov	dx,eol		;
+..\Irvine\ch05\64 bit\TestRandom.asm(231) : error A2022:instruction operands must be the same size
+					mov	cx,eollen	;
+..\Irvine\ch05\64 bit\TestRandom.asm(232) : error A2024:invalid operand size for instruction
+ 000002B1  E9 FFFFFF85			jmp	PrintString	;
+
+				;****************************************************************************
+				; static data
+				;****************************************************************************
+ 000002CC 0D 0A			eol	db  13,10		; DOS-style end of line
+ 000002CE = 00000002		eollen	equ $ - eol
+
+ 000002CE 46 69 62 6F 6E	msg1	db  'Fibonacci('	;
+	   61 63 63 69 28
+ 000002D8 = 0000000A		msg1len	equ $ - msg1
+
+ 000002D8 29 3A 20		msg2	db  '): '		;
+ 000002DB = 00000003		msg2len	equ $ - msg2
+				;****************************************************************************
+				; initialized data
+				;****************************************************************************
+ 000002DB 00003A98		term dd maxTerms		;
+				;****************************************************************************
+				; unallocated data
+				; 
+				; A better way to do this would be to actually ask for a memory 
+				; allocation and use that memory space, but this is a DOS COM file
+				; and so we are given the entire 64K of space.   Technically, this 
+				; could fail since we *might* be running on a machine which doesn't
+				; have 64K free.  If you're running on such a memory poor machine,
+				; my advice would be to not run this program.
+				;
+				;****************************************************************************
+				; static data
+ 000002DF			counter:			;
+ = 000002E5			num1 equ counter+cntDigits	;
+ = 00000F25			num2 equ num1+digits		;
+						
+Microsoft (R) Macro Assembler (x64) Version 14.13.26129.0   04/01/18 19:48:00
 ..\Irvine\ch05\64 bit\TestRandom.asm			     Symbols 2 - 1
 
 
-
-
-Procedures, parameters, and locals:
-
-                N a m e                 Type     Value    Attr
-
-ExitProcess  . . . . . . . . . .	P 	 00000000 Length= 00000000 External
-main . . . . . . . . . . . . . .	P 	 00000000 _TEXT	Length= 00000024 Public
-  L1 . . . . . . . . . . . . . .	L 	 0000000E _TEXT	
 
 
 Symbols:
 
                 N a m e                 Type     Value    Attr
 
-source . . . . . . . . . . . . .	Byte	 00000000 _DATA	
-target . . . . . . . . . . . . .	Byte	 0000001A _DATA	
+AddNumbers . . . . . . . . . . .	L 	 00000244 _TEXT	
+CRLF . . . . . . . . . . . . . .	L 	 000002B1 _TEXT	
+IncrementCount . . . . . . . . .	L 	 0000027C _TEXT	
+PrintLine  . . . . . . . . . . .	L 	 000001D7 _TEXT	
+PrintNumericString . . . . . . .	L 	 0000022D _TEXT	
+PrintString  . . . . . . . . . .	L 	 0000023B _TEXT	
+cntDigits  . . . . . . . . . . .	Number	 00000006h   
+counter  . . . . . . . . . . . .	L 	 000002DF _TEXT	
+digits . . . . . . . . . . . . .	Number	 00000C40h   
+eollen . . . . . . . . . . . . .	Number	 00000002h   
+eol  . . . . . . . . . . . . . .	Byte	 000002CC _TEXT	
+main . . . . . . . . . . . . . .	L 	 00000100 _TEXT	
+maxTerms . . . . . . . . . . . .	Number	 00003A98h   
+msg1len  . . . . . . . . . . . .	Number	 0000000Ah   
+msg1 . . . . . . . . . . . . . .	Byte	 000002CE _TEXT	
+msg2len  . . . . . . . . . . . .	Number	 00000003h   
+msg2 . . . . . . . . . . . . . .	Byte	 000002D8 _TEXT	
+num1 . . . . . . . . . . . . . .	Number	 000002E5h   
+num2 . . . . . . . . . . . . . .	Number	 00000F25h   
+term . . . . . . . . . . . . . .	DWord	 000002DB _TEXT	
 
 	   0 Warnings
-	   0 Errors
+	   36 Errors

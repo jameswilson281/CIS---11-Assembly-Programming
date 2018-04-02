@@ -1,2 +1,38 @@
 ﻿  Assembling ..\Irvine\ch05\64 bit\TestRandom.asm...
-  Project64_VS2015.vcxproj -> D:\Work\Norco College\CIS 11 - Assembly Programming\CIS---11-Assembly-Programming\Project64_VS2017\x64\Debug\Project.exe
+..\Irvine\ch05\64 bit\TestRandom.asm(63): error A2008: syntax error : .
+..\Irvine\ch05\64 bit\TestRandom.asm(79): error A2008: syntax error : .
+..\Irvine\ch05\64 bit\TestRandom.asm(84): error A2008: syntax error : .
+..\Irvine\ch05\64 bit\TestRandom.asm(177): error A2008: syntax error : .
+..\Irvine\ch05\64 bit\TestRandom.asm(183): error A2008: syntax error : aaa
+..\Irvine\ch05\64 bit\TestRandom.asm(208): error A2008: syntax error : .
+..\Irvine\ch05\64 bit\TestRandom.asm(213): error A2008: syntax error : aaa
+..\Irvine\ch05\64 bit\TestRandom.asm(265): error A2088: END directive required at end of file
+..\Irvine\ch05\64 bit\TestRandom.asm(52): error A2024: invalid operand size for instruction
+..\Irvine\ch05\64 bit\TestRandom.asm(57): error A2001: immediate operand not allowed
+..\Irvine\ch05\64 bit\TestRandom.asm(58): error A2001: immediate operand not allowed
+..\Irvine\ch05\64 bit\TestRandom.asm(59): error A2001: immediate operand not allowed
+..\Irvine\ch05\64 bit\TestRandom.asm(61): error A2006: undefined symbol : bottom
+..\Irvine\ch05\64 bit\TestRandom.asm(65): error A2024: invalid operand size for instruction
+..\Irvine\ch05\64 bit\TestRandom.asm(66): error A2024: invalid operand size for instruction
+..\Irvine\ch05\64 bit\TestRandom.asm(69): error A2024: invalid operand size for instruction
+..\Irvine\ch05\64 bit\TestRandom.asm(71): error A2009: syntax error in expression
+..\Irvine\ch05\64 bit\TestRandom.asm(72): error A2006: undefined symbol : done
+..\Irvine\ch05\64 bit\TestRandom.asm(75): error A2024: invalid operand size for instruction
+..\Irvine\ch05\64 bit\TestRandom.asm(76): error A2024: invalid operand size for instruction
+..\Irvine\ch05\64 bit\TestRandom.asm(80): error A2024: invalid operand size for instruction
+..\Irvine\ch05\64 bit\TestRandom.asm(82): error A2009: syntax error in expression
+..\Irvine\ch05\64 bit\TestRandom.asm(83): error A2006: undefined symbol : top
+..\Irvine\ch05\64 bit\TestRandom.asm(107): error A2022: instruction operands must be the same size
+..\Irvine\ch05\64 bit\TestRandom.asm(108): error A2024: invalid operand size for instruction
+..\Irvine\ch05\64 bit\TestRandom.asm(111): error A2024: invalid operand size for instruction
+..\Irvine\ch05\64 bit\TestRandom.asm(117): error A2022: instruction operands must be the same size
+..\Irvine\ch05\64 bit\TestRandom.asm(118): error A2024: invalid operand size for instruction
+..\Irvine\ch05\64 bit\TestRandom.asm(179): error A2031: must be index or base register
+..\Irvine\ch05\64 bit\TestRandom.asm(180): error A2031: must be index or base register
+..\Irvine\ch05\64 bit\TestRandom.asm(188): error A2006: undefined symbol : top
+..\Irvine\ch05\64 bit\TestRandom.asm(204): error A2024: invalid operand size for instruction
+..\Irvine\ch05\64 bit\TestRandom.asm(210): error A2031: must be index or base register
+..\Irvine\ch05\64 bit\TestRandom.asm(217): error A2006: undefined symbol : top
+..\Irvine\ch05\64 bit\TestRandom.asm(231): error A2022: instruction operands must be the same size
+..\Irvine\ch05\64 bit\TestRandom.asm(232): error A2024: invalid operand size for instruction
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\BuildCustomizations\masm.targets(69,5): error MSB3721: The command "ml64.exe /c /nologo /Zi /Fo"x64\Debug\TestRandom.obj" /Fl"Project.lst" /I "c:\Irvine" /W3 /errorReport:prompt  /Ta"..\Irvine\ch05\64 bit\TestRandom.asm"" exited with code 1.
