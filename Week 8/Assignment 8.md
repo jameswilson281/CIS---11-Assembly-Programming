@@ -1,7 +1,7 @@
 # CIS 11 - Computer Architecture - Assignment 8
 Due 2 Weeks before the final day of classes
 
-    	- [ ] Convert this variable to decimal: DWORD  1111 1111 1111 1111 1111 1111 1111 1110b
+- [ ] Convert this variable to decimal: DWORD  1111 1111 1111 1111 1111 1111 1111 1110b
 	- [ ] Convert this variable to decimal: SDWORD 1111 1111 1111 1111 1111 1111 1111 1110b
 	- [ ] Convert this variable to decimal: DWORD  0000 0000 0000 0000 0000 0000 1111 1110b
 	- [ ] Convert this variable to decimal: SDWORD 0000 0000 0000 0000 0000 0000 1111 1110b
