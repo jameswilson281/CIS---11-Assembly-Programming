@@ -19,6 +19,7 @@ Due 2 Weeks before the final day of classes
 
 	      
  - [ ] Upon entry to ```myFunction``` (above), what does the stack look like when using Microsoft x64 calling convention? (3 points)
+ > Hint: https://docs.microsoft.com/en-us/cpp/build/parameter-passing
  - [ ] Upon entry to ```myFunction``` (above), what does the stack look like when using stdcall convention (3 points)		
 	
 	
