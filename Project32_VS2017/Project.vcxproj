@@ -46,7 +46,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <MASM>
       <AssembledCodeListingFile>$(ProjectName).lst</AssembledCodeListingFile>
-      <IncludePaths>c:\Irvine</IncludePaths>
+      <IncludePaths>D:\Work\Norco College\CIS 11 - Assembly Programming\Irvine</IncludePaths>
       <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
       <WarningLevel>3</WarningLevel>
       <NoLogo>true</NoLogo>
@@ -55,7 +55,7 @@
     </MASM>
     <Link>
       <AdditionalDependencies>user32.lib;irvine32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>c:\Irvine;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Work\Norco College\CIS 11 - Assembly Programming\Irvine;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>

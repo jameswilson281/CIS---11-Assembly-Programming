@@ -1,186 +1,74 @@
-Microsoft (R) Macro Assembler (x64) Version 14.13.26131.1   04/11/18 10:29:35
+Microsoft (R) Macro Assembler (x64) Version 14.13.26131.1   04/25/18 17:25:56
 ..\Irvine\ch05\64 bit\TestRandom.asm			     Page 1 - 1
 
 
-				; Fibonachi
-
-				ExitProcess proto
-				WriteString proto
-				WriteInt64 proto
-				ReadInt64 proto
-				Crlf proto
-				XYAND proto
-				XYOR proto
-				NOTX proto
-				XXORY proto
+				ExitProcess	proto
+				WriteInt64	proto
+				Crlf		proto
  00000000			.data
- 00000000 45 6E 74 65 72		dispX BYTE "Enter a value for X: ",0
-	   20 61 20 76 61
-	   6C 75 65 20 66
-	   6F 72 20 58 3A
-	   20 00
- 00000016 45 6E 74 65 72		dispY BYTE "Enter a value for Y: ",0
-	   20 61 20 76 61
-	   6C 75 65 20 66
-	   6F 72 20 59 3A
-	   20 00
- 0000002C 59 6F 75 72 20		disp0 BYTE "Your results are: ",0
-	   72 65 73 75 6C
-	   74 73 20 61 72
-	   65 3A 20 00
- 0000003F 31 2E 20 78 20		disp1 BYTE "1. x AND y",0
-	   41 4E 44 20 79
-	   00
- 0000004A 32 2E 20 78 20		disp2 BYTE "2. x OR y",0
-	   4F 52 20 79 00
- 00000054 33 2E 20 4E 4F		disp3 BYTE "3. NOT x",0
-	   54 20 78 00
- 0000005D 34 2E 20 78 20		disp4 BYTE "4. x XOR y",0
-	   58 4F 52 20 79
-	   00
- 00000068 35 2E 20 45 78		disp5 BYTE "5. Exit program",0
-	   69 74 20 70 72
-	   6F 67 72 61 6D
-	   00
- 00000078 00				answer BYTE 0
- 00000079 00				X BYTE 0
- 0000007A 00				Y BYTE 0
- 0000007B 02				result BYTE 2
+ 00000000			nMinus2 QWORD 0
+	   0000000000000000
+ 00000008			nMinus1 QWORD 1
+	   0000000000000001
+ 00000010			n		QWORD 0
+	   0000000000000000
+ 00000018			count   QWORD 47-1
+	   000000000000002E
  00000000			.code
  00000000			main proc
- 00000000  48/ BA			mov rdx, OFFSET [dispX]
-	   0000000000000000 R
- 0000000A  E8 00000000 E		call WriteString
- 0000000F  E8 00000000 E		call Crlf
- 00000014  E8 00000000 E		call ReadInt64
- 00000019  88 05 00000079 R		mov X, al
- 0000001F  48/ BA			mov rdx, OFFSET [dispY]
-	   0000000000000016 R
- 00000029  E8 00000000 E		call WriteString
- 0000002E  E8 00000000 E		call Crlf
- 00000033  E8 00000000 E		call ReadInt64
- 00000038  88 05 0000007A R		mov Y, al
+					;set loop counter
+ 00000000  48/ 8B 0D			mov rcx, count
+	   00000018 R
+
+					;print n-2
+ 00000007  48/ 8B 05			mov rax, nMinus2
+	   00000000 R
+ 0000000E  E8 00000000 E		call WriteInt64 
+ 00000013  E8 00000000 E		call Crlf
+
+					;print n-1
+ 00000018  48/ 8B 05			mov rax, nMinus1
+	   00000008 R
+ 0000001F  E8 00000000 E		call WriteInt64
+ 00000024  E8 00000000 E		call Crlf
+ 00000029  E8 00000005			call FibGen
+					;start loop
 					
- 0000003E  48/ BA			mov rdx, OFFSET [disp1]
-	   000000000000003F R
- 00000048  E8 00000000 E		call WriteString
- 0000004D  E8 00000000 E		call Crlf
- 00000052  48/ BA			mov rdx, OFFSET [disp2]
-	   000000000000004A R
- 0000005C  E8 00000000 E		call WriteString
- 00000061  E8 00000000 E		call Crlf
- 00000066  48/ BA			mov rdx, OFFSET [disp3]
-	   0000000000000054 R
- 00000070  E8 00000000 E		call WriteString
- 00000075  E8 00000000 E		call Crlf
- 0000007A  48/ BA			mov rdx, OFFSET [disp4]
-	   000000000000005D R
- 00000084  E8 00000000 E		call WriteString
- 00000089  E8 00000000 E		call Crlf
- 0000008E  48/ BA			mov rdx, OFFSET [disp5]
-	   0000000000000068 R
- 00000098  E8 00000000 E		call WriteString
- 0000009D  E8 00000000 E		call Crlf
- 000000A2				LOOP1:
- 000000A2  E8 00000000 E		call ReadInt64
- 000000A7  E8 00000000 E		call Crlf
- 000000AC  88 05 00000078 R		mov answer, al
+ 0000002E  E8 00000000 E	   call ExitProcess
+ 00000033			main endp
 
- 000000B2  3C 01			cmp al,1
- 000000B4  74 12			je op1
- 000000B6  3C 02			cmp al,2
- 000000B8  74 1A			je op2
- 000000BA  3C 03			cmp al,3
- 000000BC  74 22			je op3
- 000000BE  3C 04			cmp al,4
- 000000C0  74 2A			je op4
- 000000C2  3C 05			cmp al,5
- 000000C4  74 32			je Exit
- 000000C6  E2 DA			Loop LOOP1
- 000000C8  E8 00000035			op1: call XYAND
- 000000CD  E8 00000000 E			call Crlf
- 000000D2  EB CE			jmp LOOP1
- 000000D4  E8 0000005D			op2: call XYOR
- 000000D9  E8 00000000 E			call Crlf
- 000000DE  EB C2			jmp LOOP1
- 000000E0  E8 00000085			op3: call NOTX
- 000000E5  E8 00000000 E			call Crlf
- 000000EA  EB B6			jmp LOOP1
- 000000EC  E8 000000A9			op4: call XXORY
- 000000F1  E8 00000000 E			call Crlf
- 000000F6  EB AA			jmp LOOP1
- 000000F8  E8 00000000 E		Exit: call ReadInt64
- 000000FD  E8 00000000 E		call ExitProcess
- 00000102			main endp
+ 00000033			FibGen PROC
+ 00000033				L1:
+						;set n = nMinus2 + nMinus1; 1+1
+ 00000033  4C/ 8B 0D				mov r9, nMinus2
+	   00000000 R
+ 0000003A  4C/ 03 0D				add r9, nMinus1
+	   00000008 R
+ 00000041  4C/ 89 0D				mov n,r9
+	   00000010 R
 
+						;print n
+ 00000048  48/ 8B 05				mov rax, n
+	   00000010 R
+ 0000004F  E8 00000000 E			call WriteInt64
+ 00000054  E8 00000000 E			call Crlf
 
+						;nMinus2 = nMinus1
+ 00000059  4C/ 8B 0D				mov r9, nMinus1
+	   00000008 R
+ 00000060  4C/ 89 0D				mov nMinus2, r9
+	   00000000 R
 
- 00000102			XYAND proc 
- 00000102  8A 1D 00000079 R		mov bl,X
- 00000108  22 1D 0000007A R		and bl,Y
- 0000010E  88 1D 0000007B R		mov result, bl
- 00000114  48/ C7 C2			mov rdx, 0
-	   00000000
- 0000011B  48/ BA			mov rdx, offset [disp0]
-	   000000000000002C R
- 00000125  E8 00000000 E		call WriteString
- 0000012A  8A 05 0000007B R		mov al, result
- 00000130  E8 00000000 E		call WriteInt64
- 00000135  C3			ret
- 00000136			XYAND endp
-
- 00000136			XYOR proc
- 00000136  8A 1D 00000079 R		mov bl,X
- 0000013C  0A 1D 0000007A R		or bl,Y
- 00000142  88 1D 0000007B R		mov result, bl
- 00000148  48/ C7 C2			mov rdx, 0
-	   00000000
- 0000014F  48/ BA			mov rdx, offset [disp0]
-	   000000000000002C R
- 00000159  E8 00000000 E		call WriteString
- 0000015E  8A 05 0000007B R		mov al, result
- 00000164  E8 00000000 E		call WriteInt64
- 00000169  C3			ret
- 0000016A			XYOR endp
-
- 0000016A			NOTX proc
- 0000016A  8A 1D 00000079 R		mov bl,X
- 00000170  F6 D3			not bl
- 00000172  88 1D 0000007B R		mov result, bl
- 00000178  48/ C7 C2			mov rdx, 0
-	   00000000
- 0000017F  48/ BA			mov rdx, offset [disp0]
-	   000000000000002C R
- 00000189  E8 00000000 E		call WriteString
- 0000018E  8A 05 0000007B R		mov al, result
- 00000194  E8 00000000 E		call WriteInt64
- 00000199  C3			ret
- 0000019A			NOTX endp
-
- 0000019A			XXORY proc 
- 0000019A  8A 1D 00000079 R		mov bl,X
- 000001A0  32 1D 0000007A R		xor bl,Y
- 000001A6  88 1D 0000007B R		mov result, bl
- 000001AC  48/ C7 C2			mov rdx, 0
-	   00000000
- 000001B3  48/ BA			mov rdx, offset [disp0]
-	   000000000000002C R
- 000001BD  E8 00000000 E		call WriteString
- 000001C2  8A 05 0000007B R		mov al, result
- 000001C8  E8 00000000 E		call WriteInt64
- 000001CD  C3			ret
- 000001CE			XXORY endp
+						;nMinus1 = n
+ 00000067  4C/ 8B 0D				mov r9, n
+	   00000010 R
+ 0000006E  4C/ 89 0D				mov nMinus1, r9
+	   00000008 R
+ 00000075  E2 BC				LOOP L1 
+ 00000077  C3			ret
+ 00000078			FibGen endp
 				end
-
-
-
-
-				;1. x AND y
-				;2. x OR y
-				;3. NOT x
-				;4. x XOR y
-				;5. Exit program
-Microsoft (R) Macro Assembler (x64) Version 14.13.26131.1   04/11/18 10:29:35
+Microsoft (R) Macro Assembler (x64) Version 14.13.26131.1   04/25/18 17:25:56
 ..\Irvine\ch05\64 bit\TestRandom.asm			     Symbols 2 - 1
 
 
@@ -192,38 +80,20 @@ Procedures, parameters, and locals:
 
 Crlf . . . . . . . . . . . . . .	P 	 00000000 Length= 00000000 External
 ExitProcess  . . . . . . . . . .	P 	 00000000 Length= 00000000 External
-NOTX . . . . . . . . . . . . . .	P 	 0000016A _TEXT	Length= 00000030 Public
-ReadInt64  . . . . . . . . . . .	P 	 00000000 Length= 00000000 External
+FibGen . . . . . . . . . . . . .	P 	 00000033 _TEXT	Length= 00000045 Public
+  L1 . . . . . . . . . . . . . .	L 	 00000033 _TEXT	
 WriteInt64 . . . . . . . . . . .	P 	 00000000 Length= 00000000 External
-WriteString  . . . . . . . . . .	P 	 00000000 Length= 00000000 External
-XXORY  . . . . . . . . . . . . .	P 	 0000019A _TEXT	Length= 00000034 Public
-XYAND  . . . . . . . . . . . . .	P 	 00000102 _TEXT	Length= 00000034 Public
-XYOR . . . . . . . . . . . . . .	P 	 00000136 _TEXT	Length= 00000034 Public
-main . . . . . . . . . . . . . .	P 	 00000000 _TEXT	Length= 00000102 Public
-  LOOP1  . . . . . . . . . . . .	L 	 000000A2 _TEXT	
-  op1  . . . . . . . . . . . . .	L 	 000000C8 _TEXT	
-  op2  . . . . . . . . . . . . .	L 	 000000D4 _TEXT	
-  op3  . . . . . . . . . . . . .	L 	 000000E0 _TEXT	
-  op4  . . . . . . . . . . . . .	L 	 000000EC _TEXT	
-  Exit . . . . . . . . . . . . .	L 	 000000F8 _TEXT	
+main . . . . . . . . . . . . . .	P 	 00000000 _TEXT	Length= 00000033 Public
 
 
 Symbols:
 
                 N a m e                 Type     Value    Attr
 
-X  . . . . . . . . . . . . . . .	Byte	 00000079 _DATA	
-Y  . . . . . . . . . . . . . . .	Byte	 0000007A _DATA	
-answer . . . . . . . . . . . . .	Byte	 00000078 _DATA	
-disp0  . . . . . . . . . . . . .	Byte	 0000002C _DATA	
-disp1  . . . . . . . . . . . . .	Byte	 0000003F _DATA	
-disp2  . . . . . . . . . . . . .	Byte	 0000004A _DATA	
-disp3  . . . . . . . . . . . . .	Byte	 00000054 _DATA	
-disp4  . . . . . . . . . . . . .	Byte	 0000005D _DATA	
-disp5  . . . . . . . . . . . . .	Byte	 00000068 _DATA	
-dispX  . . . . . . . . . . . . .	Byte	 00000000 _DATA	
-dispY  . . . . . . . . . . . . .	Byte	 00000016 _DATA	
-result . . . . . . . . . . . . .	Byte	 0000007B _DATA	
+count  . . . . . . . . . . . . .	QWord	 00000018 _DATA	
+nMinus1  . . . . . . . . . . . .	QWord	 00000008 _DATA	
+nMinus2  . . . . . . . . . . . .	QWord	 00000000 _DATA	
+n  . . . . . . . . . . . . . . .	QWord	 00000010 _DATA	
 
 	   0 Warnings
 	   0 Errors

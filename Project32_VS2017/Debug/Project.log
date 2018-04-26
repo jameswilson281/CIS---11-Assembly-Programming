@@ -1,3 +1,2 @@
 ﻿  Assembling AddTwo.asm...
-AddTwo.asm(13): fatal error A1000: cannot open file : Irvine32.inc
-C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\BuildCustomizations\masm.targets(69,5): error MSB3721: The command "ml.exe /c /nologo /Sg /Zi /Fo"Debug\AddTwo.obj" /Fl"Project.lst" /I "c:\Irvine" /W3 /errorReport:prompt  /TaAddTwo.asm" exited with code 1.
+  Project.vcxproj -> D:\Work\Norco College\CIS 11 - Assembly Programming\CIS---11-Assembly-Programming\Project32_VS2017\Debug\Project.exe
