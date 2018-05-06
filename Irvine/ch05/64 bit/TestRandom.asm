@@ -1,51 +1,54 @@
-ExitProcess	proto
-WriteInt64	proto
-Crlf		proto
+WriteInt64 PROTO
+ExitProcess PROTO
+Crlf PROTO
 .data
-nMinus2 QWORD 0
-nMinus1 QWORD 1
-n		QWORD 0
-count   QWORD 47-1
+MyArray QWORD 1d,2d,3d,4d,5d,6d
+
 .code
 main proc
-	;set loop counter
-	mov rcx, count
-
-	;print n-2
-	mov rax, nMinus2
-	call WriteInt64 
-	call Crlf
-
-	;print n-1
-	mov rax, nMinus1
+	mov rcx, 6
+	mov rbx, 0
+	mov r12, 8
+L1:
+	mov rax, rbx
+	mul r12
+	mov r11, rax
+	mov rax, MyArray[r11]
 	call WriteInt64
-	call Crlf
-	call FibGen
-	;start loop
+	inc rbx
+loop L1
 	
-   call ExitProcess
+	call Crlf
+
+	mov rcx, 3
+	mov rbx, 0
+L2:
+	mov rax, rbx
+	mul r12
+	mov r11, rax					      ;r11 is first index offset
+	mov rbp, r11
+	add rbp, 8					        ;rbp is the second index offset
+
+	;swapping
+	mov r14, MyArray[r11]				;store the first value in r14
+	mov r15, MyArray[rbp]				;store the second value in r15
+	mov MyArray[r11], r15
+	mov MyArray[rbp], r14
+
+	add rbx, 2			
+loop L2
+	
+	mov rcx, 6
+	mov rbx, 0
+L3:
+	mov rax, rbx
+	mul r12
+	mov r11, rax
+	mov rax, MyArray[r11]
+	call WriteInt64
+	inc rbx
+loop L3
+	call ExitProcess
 main endp
 
-FibGen PROC
-	L1:
-		;set n = nMinus2 + nMinus1; 1+1
-		mov r9, nMinus2
-		add r9, nMinus1
-		mov n,r9
-
-		;print n
-		mov rax, n
-		call WriteInt64
-		call Crlf
-
-		;nMinus2 = nMinus1
-		mov r9, nMinus1
-		mov nMinus2, r9
-
-		;nMinus1 = n
-		mov r9, n
-		mov nMinus1, r9
-		LOOP L1 
-ret
-FibGen endp
 end
