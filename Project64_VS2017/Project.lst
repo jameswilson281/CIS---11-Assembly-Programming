@@ -1,81 +1,74 @@
-Microsoft (R) Macro Assembler (x64) Version 14.13.26132.0   05/06/18 13:54:18
+Microsoft (R) Macro Assembler (x64) Version 14.13.26132.0   05/06/18 19:39:42
 ..\Irvine\ch05\64 bit\TestRandom.asm			     Page 1 - 1
 
 
-				WriteInt64 PROTO
-				ExitProcess PROTO
-				Crlf PROTO
- 00000000			.data
- 00000000			MyArray QWORD 1d,2d,3d,4d,5d,6d
-	   0000000000000001
-	   0000000000000002
-	   0000000000000003
-	   0000000000000004
-	   0000000000000005
-	   0000000000000006
+				;Fibonacci 
 
+				ExitProcess	proto
+				WriteInt64	proto
+				Crlf		proto
+
+ 00000000			.data
+ 00000000			nMinus2 qword 0
+	   0000000000000000
+ 00000008			nMinus1 qword 1
+	   0000000000000001
+ 00000010			n		qword 0
+	   0000000000000000
+ 00000018			counter qword 47-1
+	   000000000000002E
  00000000			.code
  00000000			main proc
- 00000000  48/ C7 C1			mov rcx, 6
-	   00000006
- 00000007  48/ C7 C3			mov rbx, 0
-	   00000000
- 0000000E  49/ C7 C4			mov r12, 8
-	   00000008
- 00000015			L1:
- 00000015  48/ 8B C3			mov rax, rbx
- 00000018  49/ F7 E4			mul r12
- 0000001B  4C/ 8B D8			mov r11, rax
- 0000001E  49/ 8B 83			mov rax, MyArray[r11]
-	   00000000 R
- 00000025  E8 00000000 E		call WriteInt64
- 0000002A  48/ FF C3			inc rbx
- 0000002D  E2 E6		loop L1
 					
- 0000002F  E8 00000000 E		call Crlf
+ 00000000  48/ 8B 0D			mov rcx, counter
+	   00000018 R
 
- 00000034  48/ C7 C1			mov rcx, 3
-	   00000003
- 0000003B  48/ C7 C3			mov rbx, 0
-	   00000000
- 00000042			L2:
- 00000042  48/ 8B C3			mov rax, rbx
- 00000045  49/ F7 E4			mul r12
- 00000048  4C/ 8B D8			mov r11, rax					      ;r11 is first index offset
- 0000004B  49/ 8B EB			mov rbp, r11
- 0000004E  48/ 83 C5 08			add rbp, 8					        ;rbp is the second index offset
+ 00000007  48/ 8B 05			mov rax, nMinus2
+	   00000000 R
+ 0000000E  E8 00000000 E		call WriteInt64 
+ 00000013  E8 00000000 E		call Crlf
 
-					;swapping
- 00000052  4D/ 8B B3			mov r14, MyArray[r11]				;store the first value in r14
-	   00000000 R
- 00000059  4C/ 8B BD			mov r15, MyArray[rbp]				;store the second value in r15
-	   00000000 R
- 00000060  4D/ 89 BB			mov MyArray[r11], r15
-	   00000000 R
- 00000067  4C/ 89 B5			mov MyArray[rbp], r14
-	   00000000 R
-
- 0000006E  48/ 83 C3 02			add rbx, 2			
- 00000072  E2 CE		loop L2
+ 00000018  48/ 8B 05			mov rax, nMinus1
+	   00000008 R
+ 0000001F  E8 00000000 E		call WriteInt64
+ 00000024  E8 00000000 E		call Crlf
+ 00000029  E8 00000005			call Fibonacci
 					
- 00000074  48/ C7 C1			mov rcx, 6
-	   00000006
- 0000007B  48/ C7 C3			mov rbx, 0
-	   00000000
- 00000082			L3:
- 00000082  48/ 8B C3			mov rax, rbx
- 00000085  49/ F7 E4			mul r12
- 00000088  4C/ 8B D8			mov r11, rax
- 0000008B  49/ 8B 83			mov rax, MyArray[r11]
-	   00000000 R
- 00000092  E8 00000000 E		call WriteInt64
- 00000097  48/ FF C3			inc rbx
- 0000009A  E2 E6		loop L3
- 0000009C  E8 00000000 E		call ExitProcess
- 000000A1			main endp
+					
+ 0000002E  E8 00000000 E	   call ExitProcess
+ 00000033			main endp
 
+ 00000033			Fibonacci proc
+ 00000033			myLoop:
+ 00000033  4C/ 8B 0D			mov r9, nMinus2
+	   00000000 R
+ 0000003A  4C/ 03 0D			add r9, nMinus1
+	   00000008 R
+ 00000041  4C/ 89 0D				mov n,r9
+	   00000010 R
+
+						
+ 00000048  48/ 8B 05			mov rax, n
+	   00000010 R
+ 0000004F  E8 00000000 E		call WriteInt64
+ 00000054  E8 00000000 E		call Crlf
+
+ 00000059  4C/ 8B 0D			mov r9, nMinus1
+	   00000008 R
+ 00000060  4C/ 89 0D			mov nMinus2, r9
+	   00000000 R
+
+						
+ 00000067  4C/ 8B 0D			mov r9, n
+	   00000010 R
+					
+ 0000006E  4C/ 89 0D			mov nMinus1, r9
+	   00000008 R
+ 00000075  E2 BC			loop myLoop
+ 00000077  C3			ret
+ 00000078			Fibonacci endp
 				end
-Microsoft (R) Macro Assembler (x64) Version 14.13.26132.0   05/06/18 13:54:18
+Microsoft (R) Macro Assembler (x64) Version 14.13.26132.0   05/06/18 19:39:42
 ..\Irvine\ch05\64 bit\TestRandom.asm			     Symbols 2 - 1
 
 
@@ -87,18 +80,20 @@ Procedures, parameters, and locals:
 
 Crlf . . . . . . . . . . . . . .	P 	 00000000 Length= 00000000 External
 ExitProcess  . . . . . . . . . .	P 	 00000000 Length= 00000000 External
+Fibonacci  . . . . . . . . . . .	P 	 00000033 _TEXT	Length= 00000045 Public
+  myLoop . . . . . . . . . . . .	L 	 00000033 _TEXT	
 WriteInt64 . . . . . . . . . . .	P 	 00000000 Length= 00000000 External
-main . . . . . . . . . . . . . .	P 	 00000000 _TEXT	Length= 000000A1 Public
-  L1 . . . . . . . . . . . . . .	L 	 00000015 _TEXT	
-  L2 . . . . . . . . . . . . . .	L 	 00000042 _TEXT	
-  L3 . . . . . . . . . . . . . .	L 	 00000082 _TEXT	
+main . . . . . . . . . . . . . .	P 	 00000000 _TEXT	Length= 00000033 Public
 
 
 Symbols:
 
                 N a m e                 Type     Value    Attr
 
-MyArray  . . . . . . . . . . . .	QWord	 00000000 _DATA	
+counter  . . . . . . . . . . . .	QWord	 00000018 _DATA	
+nMinus1  . . . . . . . . . . . .	QWord	 00000008 _DATA	
+nMinus2  . . . . . . . . . . . .	QWord	 00000000 _DATA	
+n  . . . . . . . . . . . . . . .	QWord	 00000010 _DATA	
 
 	   0 Warnings
 	   0 Errors
