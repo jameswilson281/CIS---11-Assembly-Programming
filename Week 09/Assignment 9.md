@@ -9,7 +9,7 @@ Due 2 Weeks before the final day of classes
 	>Hint: https://en.wikipedia.org/wiki/X86_calling_conventions
  - [ ] Briefly describe the concept of a "Calling Convention" (1 through 5 points depending on quality of the answer)
  - [ ] Why do the book examples always start functions with "push ebp" and "mov ebp,esp" (2 points)
- - [ ] What is the x64 equivalent to "push epb" and "mov ebp,esp)" (2 points)
+ - [ ] What is the x64 equivalent to "push ebp" and "mov ebp,esp)" (2 points)
  - [ ] What are the differences between "Microsoft x64 calling convention" and "System V AMD64 ABI calling convention" (2 points)
  	> Hint: https://en.wikipedia.org/wiki/X86_calling_conventions
 	      
