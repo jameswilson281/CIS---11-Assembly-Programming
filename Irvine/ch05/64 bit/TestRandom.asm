@@ -1,51 +1,66 @@
-;Fibonacci 
+; Andres Arevalo
+; CIS-11
 
-ExitProcess	proto
-WriteInt64	proto
-Crlf		proto
+ExitProcess Proto
+WriteInt64 Proto
+ReadInt64 Proto
+Crlf Proto
 
 .data
-nMinus2 qword 0
-nMinus1 qword 1
-n		qword 0
-counter qword 47-1
+Array QWORD 10,3,3,9,5,4,2,0,1
+
 .code
-main proc
-	
-	mov rcx, counter
+main PROC
 
-	mov rax, nMinus2
-	call WriteInt64 
-	call Crlf
-
-	mov rax, nMinus1
+; print the ARRAY
+mov rcx, lengthof Array
+mov rsi, 0
+Myloop:
+	mov rax, Array[rsi * 8]
 	call WriteInt64
-	call Crlf
-	call Fibonacci
-	
-	
-   call ExitProcess
+	inc rsi
+loop Myloop
+
+call Crlf
+call ReadInt64
+
+; bubble sort
+mov rcx, lengthof Array
+
+OuterLoop:
+mov r15, rcx ; save outerlooop counter
+mov rcx, Lengthof Array
+dec rcx
+mov rsi, 0
+	innerLoop:
+	mov r9, Array[rsi * 8]
+	mov r11, rsi
+	inc r11
+	mov r10, Array[r11 * 8]
+	cmp r9, r10
+	jle ENDLOOP
+
+	SWAP:
+		mov r13, r9
+		mov Array[rsi * 8], r10
+		mov Array[(rsi * 8) + 8], r13
+
+	ENDLOOP:
+	inc rsi
+	Loop innerLoop
+mov rcx, r15
+Loop OuterLoop
+
+mov rcx, lengthof Array
+mov rsi, 0
+finaloop:
+	mov rax, Array[rsi * 8]
+	call WriteInt64
+	inc rsi
+loop finaloop
+
+call ReadInt64
+
+call ExitProcess
 main endp
-
-Fibonacci proc
-myLoop:
-	mov r9, nMinus2
-	add r9, nMinus1
-		mov n,r9
-
-		
-	mov rax, n
-	call WriteInt64
-	call Crlf
-
-	mov r9, nMinus1
-	mov nMinus2, r9
-
-		
-	mov r9, n
-	
-	mov nMinus1, r9
-	loop myLoop
-ret
-Fibonacci endp
 end

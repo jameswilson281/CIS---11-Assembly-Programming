@@ -1,2 +1,3 @@
 ﻿  Assembling AddTwo.asm...
+AddTwo.asm(5): warning A4011: multiple .MODEL directives found : .MODEL ignored
   Project.vcxproj -> D:\Work\Norco College\CIS 11 - Assembly Programming\CIS---11-Assembly-Programming\Project32_VS2017\Debug\Project.exe

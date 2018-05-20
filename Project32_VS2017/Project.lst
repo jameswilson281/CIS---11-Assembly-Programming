@@ -1,10 +1,10 @@
-Microsoft (R) Macro Assembler Version 14.13.26132.0	    05/06/18 19:40:09
+Microsoft (R) Macro Assembler Version 14.14.26428.1	    05/20/18 14:39:14
 AddTwo.asm						     Page 1 - 1
 
 
-				;Random A screen
-
-				include Irvine32.inc
+				; AddTwo.asm - adds two 32-bit integers.
+				; Chapter 3 example
+				Include Irvine32.inc
 			      C ; Include file for Irvine32.lib             (Irvine32.inc)
 			      C 
 			      C ;OPTION CASEMAP:NONE		; optional: make identifiers case-sensitive
@@ -22,50 +22,81 @@ AddTwo.asm						     Page 1 - 1
 			      C .NOLIST
 			      C .LIST
 			      C 
+				.386
+				.model flat,stdcall
+AddTwo.asm(5) : warning A4011:multiple .MODEL directives found : .MODEL ignored
+				.stack 4096
+				ExitProcess proto,dwExitCode:dword
  00000000			.data
- 00000000 00			rows BYTE 0
- 00000001 00			columns BYTE 0
- 00000002 00			RandomRow BYTE 0
- 00000003 00			RandomColumn BYTE 0
-
+ 00000000 00000028		array DWORD 40,60,80,70
+	   0000003C
+	   00000050
+	   00000046
+ 00000010 00000000		count DWORD ? ; for inner loop
+ 00000014 00000001		indx DWORD 1 ; for storing index
  00000000			.code
  00000000			main proc
+ 00000000  BB 00000000 R		mov ebx, OFFSET array
+ 00000005  B9 00000004			mov ecx, LENGTHOF array
 
- 00000000  E8 00000000 E	call GetMaxXY 
- 00000005  A2 00000000 R	mov rows,al
- 0000000A  88 15 00000001 R	mov columns, dl
- 00000010  B9 00000064		mov ecx, 100
+ 0000000A			print1:
+ 0000000A  8B 03			mov eax,[ebx]
+ 0000000C  E8 00000000 E		call WriteInt
+ 00000011  83 C3 04			add ebx, TYPE array
+ 00000014  E2 F4			loop print1
 
- 00000015			myLoop:
- 00000015  0F B6 05		movzx eax,rows
+ 00000016  B9 00000004			mov ecx, LENGTHOF array
+ 0000001B  BE 00000000			mov esi, 0
+ 00000020  49				dec ecx
+
+ 00000021			outer_loop:
+
+ 00000021  89 0D 00000010 R		mov count, ecx
+
+					; n - i - 1
+ 00000027  B9 00000004			mov ecx,LENGTHOF array 
+ 0000002C  2B 0D 00000014 R		sub ecx,indx
+ 00000032  83 E9 01			sub ecx,1
+
+ 00000035			inner_loop:
+ 00000035  8B 04 B5			mov eax,array[esi * TYPE array]
 	   00000000 R
- 0000001C  E8 00000000 E	call RandomRange
- 00000021  A2 00000002 R	mov RandomRow,al
+ 0000003C  3B 04 B5			cmp eax,array[esi * TYPE array + TYPE array]
+	   00000004 R
+ 00000043  7E 0E			jle inner_end ; swap if false
 
- 00000026  0F B6 05		movzx eax, columns
-	   00000001 R
- 0000002D  E8 00000000 E	call RandomRange
- 00000032  A2 00000003 R	mov RandomColumn, al
+ 00000045  87 04 B5			xchg eax,array[esi * TYPE array + type array]
+	   00000004 R
+ 0000004C  89 04 B5			mov array[esi * TYPE array],eax
+	   00000000 R
 
- 00000037  8A 35 00000002 R	mov dh,RandomRow 
- 0000003D  8A 15 00000003 R	mov dl,RandomColumn 
- 00000043  E8 00000000 E	call Gotoxy
+ 00000053			inner_end:
+ 00000053  E2 E0			loop inner_loop
 
- 00000048  B0 41		mov al, 'A'			
- 0000004A  E8 00000000 E	call WriteChar
- 0000004F  E8 00000000 E	call crlf
+				; inner_loop end
 
- 00000054  B8 00000064		mov eax,100				
- 00000059  E8 00000000 E	call Delay
-					
- 0000005E  E2 B5			loop myLoop
+ 00000055  46				inc esi
+ 00000056  89 35 00000014 R		mov indx,esi
+ 0000005C  8B 0D 00000010 R		mov ecx,count
 
-				invoke ExitProcess,0
- 00000060  6A 00	   *	    push   +000000000h
- 00000062  E8 00000000 E   *	    call   ExitProcess
- 00000067			main endp
+ 00000062  E2 BD			loop outer_loop
+				; outer_loop end
+
+ 00000064  BE 00000000 R		mov esi, OFFSET array
+ 00000069  B9 00000004			mov ecx, LENGTHOF array
+ 0000006E			print2:
+ 0000006E  8B 06			mov eax, [esi]
+ 00000070  E8 00000000 E		call WriteInt
+ 00000075  83 C6 04			add esi, TYPE array
+ 00000078  E2 F4			loop print2
+
+
+					invoke ExitProcess,0
+ 0000007A  6A 00	   *	    push   +000000000h
+ 0000007C  E8 00000000 E   *	    call   ExitProcess
+ 00000081			main endp
 				end main
-Microsoft (R) Macro Assembler Version 14.13.26132.0	    05/06/18 19:40:09
+Microsoft (R) Macro Assembler Version 14.14.26428.1	    05/20/18 14:39:14
 AddTwo.asm						     Symbols 2 - 1
 
 
@@ -159,8 +190,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 00000004 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 00000067 Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000018 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000081 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -267,8 +298,12 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000067 Public STDCALL
-  myLoop . . . . . . . . . . . .	L Near	 00000015 _TEXT	
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000081 Public STDCALL
+  print1 . . . . . . . . . . . .	L Near	 0000000A _TEXT	
+  outer_loop . . . . . . . . . .	L Near	 00000021 _TEXT	
+  inner_loop . . . . . . . . . .	L Near	 00000035 _TEXT	
+  inner_end  . . . . . . . . . .	L Near	 00000053 _TEXT	
+  print2 . . . . . . . . . . . .	L Near	 0000006E _TEXT	
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
@@ -394,8 +429,6 @@ OPEN_EXISTING  . . . . . . . . .	Number	 00000003h
 PeekConsoleInput . . . . . . . .	Text   	 PeekConsoleInputA
 RIGHT_ALT_PRESSED  . . . . . . .	Number	 00000001h   
 RIGHT_CTRL_PRESSED . . . . . . .	Number	 00000004h   
-RandomColumn . . . . . . . . . .	Byte	 00000003 _DATA	
-RandomRow  . . . . . . . . . . .	Byte	 00000002 _DATA	
 ReadConsoleInput . . . . . . . .	Text   	 ReadConsoleInputA
 ReadConsole  . . . . . . . . . .	Text   	 ReadConsoleA
 SCROLLLOCK_ON  . . . . . . . . .	Number	 00000040h   
@@ -489,14 +522,16 @@ VK_UP  . . . . . . . . . . . . .	Number	 00000026h
 WINDOW_BUFFER_SIZE_EVENT . . . .	Number	 00000004h   
 WriteConsoleOutputCharacter  . .	Text   	 WriteConsoleOutputCharacterA
 WriteConsole . . . . . . . . . .	Text   	 WriteConsoleA
+array  . . . . . . . . . . . . .	DWord	 00000000 _DATA	
 black  . . . . . . . . . . . . .	Number	 00000000h   
 blue . . . . . . . . . . . . . .	Number	 00000001h   
 brown  . . . . . . . . . . . . .	Number	 00000006h   
-columns  . . . . . . . . . . . .	Byte	 00000001 _DATA	
+count  . . . . . . . . . . . . .	DWord	 00000010 _DATA	
 cyan . . . . . . . . . . . . . .	Number	 00000003h   
 exit . . . . . . . . . . . . . .	Text   	 INVOKE ExitProcess,0
 gray . . . . . . . . . . . . . .	Number	 00000008h   
 green  . . . . . . . . . . . . .	Number	 00000002h   
+indx . . . . . . . . . . . . . .	DWord	 00000014 _DATA	
 lightBlue  . . . . . . . . . . .	Number	 00000009h   
 lightCyan  . . . . . . . . . . .	Number	 0000000Bh   
 lightGray  . . . . . . . . . . .	Number	 00000007h   
@@ -505,10 +540,9 @@ lightMagenta . . . . . . . . . .	Number	 0000000Dh
 lightRed . . . . . . . . . . . .	Number	 0000000Ch   
 magenta  . . . . . . . . . . . .	Number	 00000005h   
 red  . . . . . . . . . . . . . .	Number	 00000004h   
-rows . . . . . . . . . . . . . .	Byte	 00000000 _DATA	
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
 wsprintf . . . . . . . . . . . .	Text   	 wsprintfA
 yellow . . . . . . . . . . . . .	Number	 0000000Eh   
 
-	   0 Warnings
+	   1 Warnings
 	   0 Errors

@@ -1,74 +1,96 @@
-Microsoft (R) Macro Assembler (x64) Version 14.13.26132.0   05/06/18 19:39:42
+Microsoft (R) Macro Assembler (x64) Version 14.14.26428.1   05/20/18 14:38:42
 ..\Irvine\ch05\64 bit\TestRandom.asm			     Page 1 - 1
 
 
-				;Fibonacci 
+				; Andres Arevalo
+				; CIS-11
 
-				ExitProcess	proto
-				WriteInt64	proto
-				Crlf		proto
+				ExitProcess Proto
+				WriteInt64 Proto
+				ReadInt64 Proto
+				Crlf Proto
 
  00000000			.data
- 00000000			nMinus2 qword 0
+ 00000000			Array QWORD 10,3,3,9,5,4,2,0,1
+	   000000000000000A
+	   0000000000000003
+	   0000000000000003
+	   0000000000000009
+	   0000000000000005
+	   0000000000000004
+	   0000000000000002
 	   0000000000000000
- 00000008			nMinus1 qword 1
 	   0000000000000001
- 00000010			n		qword 0
-	   0000000000000000
- 00000018			counter qword 47-1
-	   000000000000002E
+
  00000000			.code
- 00000000			main proc
-					
- 00000000  48/ 8B 0D			mov rcx, counter
-	   00000018 R
+ 00000000			main PROC
 
- 00000007  48/ 8B 05			mov rax, nMinus2
+				; print the ARRAY
+ 00000000  48/ C7 C1		mov rcx, lengthof Array
+	   00000009
+ 00000007  48/ C7 C6		mov rsi, 0
+	   00000000
+ 0000000E			Myloop:
+ 0000000E  48/ 8B 04 F5			mov rax, Array[rsi * 8]
 	   00000000 R
- 0000000E  E8 00000000 E		call WriteInt64 
- 00000013  E8 00000000 E		call Crlf
+ 00000016  E8 00000000 E		call WriteInt64
+ 0000001B  48/ FF C6			inc rsi
+ 0000001E  E2 EE		loop Myloop
 
- 00000018  48/ 8B 05			mov rax, nMinus1
-	   00000008 R
- 0000001F  E8 00000000 E		call WriteInt64
- 00000024  E8 00000000 E		call Crlf
- 00000029  E8 00000005			call Fibonacci
-					
-					
- 0000002E  E8 00000000 E	   call ExitProcess
- 00000033			main endp
+ 00000020  E8 00000000 E	call Crlf
+ 00000025  E8 00000000 E	call ReadInt64
 
- 00000033			Fibonacci proc
- 00000033			myLoop:
- 00000033  4C/ 8B 0D			mov r9, nMinus2
+				; bubble sort
+ 0000002A  48/ C7 C1		mov rcx, lengthof Array
+	   00000009
+
+ 00000031			OuterLoop:
+ 00000031  4C/ 8B F9		mov r15, rcx ; save outerlooop counter
+ 00000034  48/ C7 C1		mov rcx, Lengthof Array
+	   00000009
+ 0000003B  48/ FF C9		dec rcx
+ 0000003E  48/ C7 C6		mov rsi, 0
+	   00000000
+ 00000045				innerLoop:
+ 00000045  4C/ 8B 0C F5			mov r9, Array[rsi * 8]
 	   00000000 R
- 0000003A  4C/ 03 0D			add r9, nMinus1
-	   00000008 R
- 00000041  4C/ 89 0D				mov n,r9
-	   00000010 R
-
-						
- 00000048  48/ 8B 05			mov rax, n
-	   00000010 R
- 0000004F  E8 00000000 E		call WriteInt64
- 00000054  E8 00000000 E		call Crlf
-
- 00000059  4C/ 8B 0D			mov r9, nMinus1
-	   00000008 R
- 00000060  4C/ 89 0D			mov nMinus2, r9
+ 0000004D  4C/ 8B DE			mov r11, rsi
+ 00000050  49/ FF C3			inc r11
+ 00000053  4E/ 8B 14 DD			mov r10, Array[r11 * 8]
 	   00000000 R
+ 0000005B  4D/ 3B CA			cmp r9, r10
+ 0000005E  7E 13			jle ENDLOOP
 
-						
- 00000067  4C/ 8B 0D			mov r9, n
-	   00000010 R
-					
- 0000006E  4C/ 89 0D			mov nMinus1, r9
+ 00000060				SWAP:
+ 00000060  4D/ 8B E9				mov r13, r9
+ 00000063  4C/ 89 14 F5				mov Array[rsi * 8], r10
+	   00000000 R
+ 0000006B  4C/ 89 2C F5				mov Array[(rsi * 8) + 8], r13
 	   00000008 R
- 00000075  E2 BC			loop myLoop
- 00000077  C3			ret
- 00000078			Fibonacci endp
+
+ 00000073				ENDLOOP:
+ 00000073  48/ FF C6			inc rsi
+ 00000076  E2 CD			Loop innerLoop
+ 00000078  49/ 8B CF		mov rcx, r15
+ 0000007B  E2 B4		Loop OuterLoop
+
+ 0000007D  48/ C7 C1		mov rcx, lengthof Array
+	   00000009
+ 00000084  48/ C7 C6		mov rsi, 0
+	   00000000
+ 0000008B			finaloop:
+ 0000008B  48/ 8B 04 F5			mov rax, Array[rsi * 8]
+	   00000000 R
+ 00000093  E8 00000000 E		call WriteInt64
+ 00000098  48/ FF C6			inc rsi
+ 0000009B  E2 EE		loop finaloop
+
+ 0000009D  E8 00000000 E	call ReadInt64
+
+ 000000A2  E8 00000000 E	call ExitProcess
+ 000000A7			main endp
 				end
-Microsoft (R) Macro Assembler (x64) Version 14.13.26132.0   05/06/18 19:39:42
+Microsoft (R) Macro Assembler (x64) Version 14.14.26428.1   05/20/18 14:38:42
 ..\Irvine\ch05\64 bit\TestRandom.asm			     Symbols 2 - 1
 
 
@@ -80,20 +102,22 @@ Procedures, parameters, and locals:
 
 Crlf . . . . . . . . . . . . . .	P 	 00000000 Length= 00000000 External
 ExitProcess  . . . . . . . . . .	P 	 00000000 Length= 00000000 External
-Fibonacci  . . . . . . . . . . .	P 	 00000033 _TEXT	Length= 00000045 Public
-  myLoop . . . . . . . . . . . .	L 	 00000033 _TEXT	
+ReadInt64  . . . . . . . . . . .	P 	 00000000 Length= 00000000 External
 WriteInt64 . . . . . . . . . . .	P 	 00000000 Length= 00000000 External
-main . . . . . . . . . . . . . .	P 	 00000000 _TEXT	Length= 00000033 Public
+main . . . . . . . . . . . . . .	P 	 00000000 _TEXT	Length= 000000A7 Public
+  Myloop . . . . . . . . . . . .	L 	 0000000E _TEXT	
+  OuterLoop  . . . . . . . . . .	L 	 00000031 _TEXT	
+  innerLoop  . . . . . . . . . .	L 	 00000045 _TEXT	
+  SWAP . . . . . . . . . . . . .	L 	 00000060 _TEXT	
+  ENDLOOP  . . . . . . . . . . .	L 	 00000073 _TEXT	
+  finaloop . . . . . . . . . . .	L 	 0000008B _TEXT	
 
 
 Symbols:
 
                 N a m e                 Type     Value    Attr
 
-counter  . . . . . . . . . . . .	QWord	 00000018 _DATA	
-nMinus1  . . . . . . . . . . . .	QWord	 00000008 _DATA	
-nMinus2  . . . . . . . . . . . .	QWord	 00000000 _DATA	
-n  . . . . . . . . . . . . . . .	QWord	 00000010 _DATA	
+Array  . . . . . . . . . . . . .	QWord	 00000000 _DATA	
 
 	   0 Warnings
 	   0 Errors

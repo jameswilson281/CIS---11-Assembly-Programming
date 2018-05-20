@@ -1,42 +1,67 @@
-;Random A screen
-
-include Irvine32.inc
+; AddTwo.asm - adds two 32-bit integers.
+; Chapter 3 example
+Include Irvine32.inc
+.386
+.model flat,stdcall
+.stack 4096
+ExitProcess proto,dwExitCode:dword
 .data
-rows BYTE 0
-columns BYTE 0
-RandomRow BYTE 0
-RandomColumn BYTE 0
-
+array DWORD 40,60,80,70
+count DWORD ? ; for inner loop
+indx DWORD 1 ; for storing index
 .code
 main proc
+	mov ebx, OFFSET array
+	mov ecx, LENGTHOF array
 
-call GetMaxXY 
-mov rows,al
-mov columns, dl
-mov ecx, 100
+print1:
+	mov eax,[ebx]
+	call WriteInt
+	add ebx, TYPE array
+	loop print1
 
-myLoop:
-movzx eax,rows
-call RandomRange
-mov RandomRow,al
+	mov ecx, LENGTHOF array
+	mov esi, 0
+	dec ecx
 
-movzx eax, columns
-call RandomRange
-mov RandomColumn, al
+outer_loop:
 
-mov dh,RandomRow 
-mov dl,RandomColumn 
-call Gotoxy
+	mov count, ecx
 
-mov al, 'A'			
-call WriteChar
-call crlf
+	; n - i - 1
+	mov ecx,LENGTHOF array 
+	sub ecx,indx
+	sub ecx,1
 
-mov eax,100				
-call Delay
-	
-	loop myLoop
+inner_loop:
+	mov eax,array[esi * TYPE array]
+	cmp eax,array[esi * TYPE array + TYPE array]
+	jle inner_end ; swap if false
 
-invoke ExitProcess,0
+	xchg eax,array[esi * TYPE array + type array]
+	mov array[esi * TYPE array],eax
+
+inner_end:
+	loop inner_loop
+
+; inner_loop end
+
+	inc esi
+	mov indx,esi
+	mov ecx,count
+
+	loop outer_loop
+; outer_loop end
+
+	mov esi, OFFSET array
+	mov ecx, LENGTHOF array
+print2:
+	mov eax, [esi]
+	call WriteInt
+	add esi, TYPE array
+	loop print2
+
+
+	invoke ExitProcess,0
 main endp
 end main
