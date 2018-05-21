@@ -13,3 +13,5 @@
 - [ ] Was the book used in this course effective/helpful?  Would you recommend a different one?
 - [ ] Were there any topics that we didn't cover that you would have liked to see included?
 - [ ] How can this course be improved?
+
+This assignment is worth 7 points and is EXTRA CREDIT.  The content of your answers will NOT influence your grade.
