@@ -1,96 +1,100 @@
-Microsoft (R) Macro Assembler (x64) Version 14.14.26428.1   05/20/18 14:38:42
+Microsoft (R) Macro Assembler (x64) Version 14.14.26429.4   05/27/18 17:48:10
 ..\Irvine\ch05\64 bit\TestRandom.asm			     Page 1 - 1
 
 
-				; Andres Arevalo
-				; CIS-11
-
-				ExitProcess Proto
-				WriteInt64 Proto
-				ReadInt64 Proto
-				Crlf Proto
+				ExitProcess proto
+				WriteInt64 proto
+				ReadInt64 proto
+				Crlf proto
 
  00000000			.data
- 00000000			Array QWORD 10,3,3,9,5,4,2,0,1
-	   000000000000000A
-	   0000000000000003
-	   0000000000000003
-	   0000000000000009
+ 00000000			myArray QWORD 5, 1, 4, 2, 8, 10, 26, 13, 6
 	   0000000000000005
+	   0000000000000001
 	   0000000000000004
 	   0000000000000002
-	   0000000000000000
-	   0000000000000001
+	   0000000000000008
+	   000000000000000A
+	   000000000000001A
+	   000000000000000D
+	   0000000000000006
 
  00000000			.code
- 00000000			main PROC
+ 00000000			main proc
 
-				; print the ARRAY
- 00000000  48/ C7 C1		mov rcx, lengthof Array
+				  ;print array
+ 00000000  48/ C7 C1		  mov rcx, LENGTHOF myArray
 	   00000009
- 00000007  48/ C7 C6		mov rsi, 0
+ 00000007  48/ C7 C6		  mov rsi, 0
 	   00000000
- 0000000E			Myloop:
- 0000000E  48/ 8B 04 F5			mov rax, Array[rsi * 8]
+				  
+ 0000000E			  L1:
+ 0000000E  48/ 8B 86		    mov rax, myArray[rsi]
 	   00000000 R
- 00000016  E8 00000000 E		call WriteInt64
- 0000001B  48/ FF C6			inc rsi
- 0000001E  E2 EE		loop Myloop
-
- 00000020  E8 00000000 E	call Crlf
- 00000025  E8 00000000 E	call ReadInt64
-
-				; bubble sort
- 0000002A  48/ C7 C1		mov rcx, lengthof Array
+ 00000015  E8 00000000 E	    call WriteInt64
+ 0000001A  48/ 83 C6 08		    add rsi, 8
+ 0000001E  E2 EE		  LOOP L1
+				 
+				  ;bubble sort array
+				 
+ 00000020  48/ C7 C1		  mov rcx, LENGTHOF myArray
 	   00000009
-
- 00000031			OuterLoop:
- 00000031  4C/ 8B F9		mov r15, rcx ; save outerlooop counter
- 00000034  48/ C7 C1		mov rcx, Lengthof Array
-	   00000009
- 0000003B  48/ FF C9		dec rcx
- 0000003E  48/ C7 C6		mov rsi, 0
+ 00000027  48/ C7 C6		  mov rsi, 0
 	   00000000
- 00000045				innerLoop:
- 00000045  4C/ 8B 0C F5			mov r9, Array[rsi * 8]
-	   00000000 R
- 0000004D  4C/ 8B DE			mov r11, rsi
- 00000050  49/ FF C3			inc r11
- 00000053  4E/ 8B 14 DD			mov r10, Array[r11 * 8]
-	   00000000 R
- 0000005B  4D/ 3B CA			cmp r9, r10
- 0000005E  7E 13			jle ENDLOOP
-
- 00000060				SWAP:
- 00000060  4D/ 8B E9				mov r13, r9
- 00000063  4C/ 89 14 F5				mov Array[rsi * 8], r10
-	   00000000 R
- 0000006B  4C/ 89 2C F5				mov Array[(rsi * 8) + 8], r13
-	   00000008 R
-
- 00000073				ENDLOOP:
- 00000073  48/ FF C6			inc rsi
- 00000076  E2 CD			Loop innerLoop
- 00000078  49/ 8B CF		mov rcx, r15
- 0000007B  E2 B4		Loop OuterLoop
-
- 0000007D  48/ C7 C1		mov rcx, lengthof Array
+				  
+ 0000002E			  OUTERLOOP:
+ 0000002E  4C/ 8B F9			mov r15, rcx
+ 00000031  48/ C7 C1			mov rcx, LENGTHOF myArray
 	   00000009
- 00000084  48/ C7 C6		mov rsi, 0
+ 00000038  48/ FF C9			dec rcx
+ 0000003B  48/ C7 C6			mov rsi, 0
 	   00000000
- 0000008B			finaloop:
- 0000008B  48/ 8B 04 F5			mov rax, Array[rsi * 8]
+
+ 00000042				INNERLOOP:
+ 00000042  4C/ 8B 0C F5				mov r9, myArray[rsi * 8]
 	   00000000 R
- 00000093  E8 00000000 E		call WriteInt64
- 00000098  48/ FF C6			inc rsi
- 0000009B  E2 EE		loop finaloop
+ 0000004A  4C/ 8B DE				mov r11, rsi
+ 0000004D  49/ FF C3				inc r11
+ 00000050  4E/ 8B 14 DD				mov r10, myArray[r11 * 8]
+	   00000000 R
+ 00000058  4D/ 3B CA				cmp r9, r10
+ 0000005B  7C 13				jl ENDLOOP
+				    
+ 0000005D					SWAP:
+ 0000005D  4D/ 8B E9					mov r13, r9
+ 00000060  4C/ 89 14 F5					mov myArray[rsi * 8], r10
+	   00000000 R
+ 00000068  4E/ 89 2C DD					mov myArray[r11 * 8], r13
+	   00000000 R
+				    
+ 00000070					ENDLOOP:
+ 00000070  48/ FF C6					inc rsi
+				    
+ 00000073  E2 CD			LOOP INNERLOOP
 
- 0000009D  E8 00000000 E	call ReadInt64
+ 00000075  49/ 8B CF			mov rcx, r15
+ 00000078  E2 B4		  LOOP OUTERLOOP
+				  
+				  ;print array
+ 0000007A  48/ C7 C1		  mov rcx, LENGTHOF myArray
+	   00000009
+ 00000081  48/ C7 C6		  mov rsi, 0
+	   00000000
+				  
+ 00000088  E8 00000000 E	  call Crlf
 
- 000000A2  E8 00000000 E	call ExitProcess
- 000000A7			main endp
-				end
-Microsoft (R) Macro Assembler (x64) Version 14.14.26428.1   05/20/18 14:38:42
+ 0000008D			  L2:
+ 0000008D  48/ 8B 86		    mov rax, myArray[rsi]
+	   00000000 R
+ 00000094  E8 00000000 E	    call WriteInt64
+ 00000099  48/ 83 C6 08		    add rsi, 8
+ 0000009D  E2 EE		  LOOP L2
+				 
+ 0000009F  E8 00000000 E	 call ReadInt64
+
+ 000000A4			 main endp
+				 end
+Microsoft (R) Macro Assembler (x64) Version 14.14.26429.4   05/27/18 17:48:10
 ..\Irvine\ch05\64 bit\TestRandom.asm			     Symbols 2 - 1
 
 
@@ -104,20 +108,20 @@ Crlf . . . . . . . . . . . . . .	P 	 00000000 Length= 00000000 External
 ExitProcess  . . . . . . . . . .	P 	 00000000 Length= 00000000 External
 ReadInt64  . . . . . . . . . . .	P 	 00000000 Length= 00000000 External
 WriteInt64 . . . . . . . . . . .	P 	 00000000 Length= 00000000 External
-main . . . . . . . . . . . . . .	P 	 00000000 _TEXT	Length= 000000A7 Public
-  Myloop . . . . . . . . . . . .	L 	 0000000E _TEXT	
-  OuterLoop  . . . . . . . . . .	L 	 00000031 _TEXT	
-  innerLoop  . . . . . . . . . .	L 	 00000045 _TEXT	
-  SWAP . . . . . . . . . . . . .	L 	 00000060 _TEXT	
-  ENDLOOP  . . . . . . . . . . .	L 	 00000073 _TEXT	
-  finaloop . . . . . . . . . . .	L 	 0000008B _TEXT	
+main . . . . . . . . . . . . . .	P 	 00000000 _TEXT	Length= 000000A4 Public
+  L1 . . . . . . . . . . . . . .	L 	 0000000E _TEXT	
+  OUTERLOOP  . . . . . . . . . .	L 	 0000002E _TEXT	
+  INNERLOOP  . . . . . . . . . .	L 	 00000042 _TEXT	
+  SWAP . . . . . . . . . . . . .	L 	 0000005D _TEXT	
+  ENDLOOP  . . . . . . . . . . .	L 	 00000070 _TEXT	
+  L2 . . . . . . . . . . . . . .	L 	 0000008D _TEXT	
 
 
 Symbols:
 
                 N a m e                 Type     Value    Attr
 
-Array  . . . . . . . . . . . . .	QWord	 00000000 _DATA	
+myArray  . . . . . . . . . . . .	QWord	 00000000 _DATA	
 
 	   0 Warnings
 	   0 Errors

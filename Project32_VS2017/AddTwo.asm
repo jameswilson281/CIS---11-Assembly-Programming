@@ -1,67 +1,104 @@
-; AddTwo.asm - adds two 32-bit integers.
-; Chapter 3 example
-Include Irvine32.inc
-.386
-.model flat,stdcall
-.stack 4096
-ExitProcess proto,dwExitCode:dword
+ExitProcess PROTO
+Process_A PROTO
+Process_B PROTO
+Process_C PROTO
+Process_D PROTO
+Process_E PROTO
+ReadChar PROTO
+Crlf PROTO
+WriteString PROTO
+
 .data
-array DWORD 40,60,80,70
-count DWORD ? ; for inner loop
-indx DWORD 1 ; for storing index
+CaseTable BYTE 'A' 
+DWORD Process_A 
+EntrySize = ($ - CaseTable)
+BYTE 'B'
+DWORD Process_B
+BYTE 'C'
+DWORD Process_C
+BYTE 'D'
+DWORD Process_D
+BYTE 'E'
+DWORD Process_E
+
+NumberOfEntries = ($ - CaseTable) / EntrySize
+prompt BYTE "Press choose one of the following: ", 0
+optionA BYTE "A) ", 0
+optionB BYTE "B) ", 0
+optionC BYTE "C) ", 0
+optionD BYTE "D) ", 0
+optionE BYTE "E) ", 0
+msgA BYTE "ProcessA", 0
+msgB BYTE "ProcessB", 0
+msgC BYTE "ProcessC", 0
+msgD BYTE "ProcessD", 0
+msgE BYTE "ProcessE", 0
+
+
 .code
 main proc
-	mov ebx, OFFSET array
-	mov ecx, LENGTHOF array
+	mov rdx,OFFSET prompt 
+	call WriteString
+	call Crlf
+	mov rdx,OFFSET optionA
+	call WriteString
+	call Crlf
+	mov rdx,OFFSET optionB
+	call WriteString
+	call Crlf
+	mov rdx,OFFSET optionC
+	call WriteString
+	call Crlf
+	mov rdx,OFFSET optionD 
+	call WriteString
+	call Crlf
+	mov rdx,OFFSET optionE 
+	call WriteString
+	call Crlf
 
-print1:
-	mov eax,[ebx]
-	call WriteInt
-	add ebx, TYPE array
-	loop print1
+	call ReadChar 
+	mov rbx,OFFSET CaseTable 
+	mov rcx,NumberOfEntries 
 
-	mov ecx, LENGTHOF array
-	mov esi, 0
-	dec ecx
+L1:
+	cmp al,[rbx] 
+	jne L2 
+	call NEAR PTR [rbx + 1] 
+	call WriteString 
+	call Crlf
+	jmp L3 
 
-outer_loop:
-
-	mov count, ecx
-
-	; n - i - 1
-	mov ecx,LENGTHOF array 
-	sub ecx,indx
-	sub ecx,1
-
-inner_loop:
-	mov eax,array[esi * TYPE array]
-	cmp eax,array[esi * TYPE array + TYPE array]
-	jle inner_end ; swap if false
-
-	xchg eax,array[esi * TYPE array + type array]
-	mov array[esi * TYPE array],eax
-
-inner_end:
-	loop inner_loop
-
-; inner_loop end
-
-	inc esi
-	mov indx,esi
-	mov ecx,count
-
-	loop outer_loop
-; outer_loop end
-
-	mov esi, OFFSET array
-	mov ecx, LENGTHOF array
-print2:
-	mov eax, [esi]
-	call WriteInt
-	add esi, TYPE array
-	loop print2
+L2:
+	add rbx,EntrySize ; point to the next entry
+	loop L1 
+L3:
+	call exitProcess
 
 
-	invoke ExitProcess,0
+Process_A PROC
+	mov rdx,OFFSET msgA
+	ret
+Process_A ENDP
+
+Process_B PROC
+	mov rdx,OFFSET msgB
+	ret
+Process_B ENDP
+
+Process_C PROC
+	mov rdx,OFFSET msgC
+	ret
+Process_C ENDP
+
+Process_D PROC
+	mov rdx,OFFSET msgD
+	ret
+Process_D ENDP
+
+Process_E PROC
+	mov rdx,OFFSET msgE
+	ret
+Process_E ENDP
+
 main endp
-end main
+end

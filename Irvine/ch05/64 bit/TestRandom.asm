@@ -1,66 +1,69 @@
-; Andres Arevalo
-; CIS-11
-
-ExitProcess Proto
-WriteInt64 Proto
-ReadInt64 Proto
-Crlf Proto
+ExitProcess proto
+WriteInt64 proto
+ReadInt64 proto
+Crlf proto
 
 .data
-Array QWORD 10,3,3,9,5,4,2,0,1
+myArray QWORD 5, 1, 4, 2, 8, 10, 26, 13, 6
 
 .code
-main PROC
+main proc
 
-; print the ARRAY
-mov rcx, lengthof Array
-mov rsi, 0
-Myloop:
-	mov rax, Array[rsi * 8]
-	call WriteInt64
-	inc rsi
-loop Myloop
+  ;print array
+  mov rcx, LENGTHOF myArray
+  mov rsi, 0
+  
+  L1:
+    mov rax, myArray[rsi]
+    call WriteInt64
+    add rsi, 8
+  LOOP L1
+ 
+  ;bubble sort array
+ 
+  mov rcx, LENGTHOF myArray
+  mov rsi, 0
+  
+  OUTERLOOP:
+	mov r15, rcx
+	mov rcx, LENGTHOF myArray
+	dec rcx
+	mov rsi, 0
 
-call Crlf
-call ReadInt64
+	INNERLOOP:
+		mov r9, myArray[rsi * 8]
+		mov r11, rsi
+		inc r11
+		mov r10, myArray[r11 * 8]
+		cmp r9, r10
+		jl ENDLOOP
+    
+		SWAP:
+			mov r13, r9
+			mov myArray[rsi * 8], r10
+			mov myArray[r11 * 8], r13
+    
+		ENDLOOP:
+			inc rsi
+    
+	LOOP INNERLOOP
 
-; bubble sort
-mov rcx, lengthof Array
+	mov rcx, r15
+  LOOP OUTERLOOP
+  
+  ;print array
+  mov rcx, LENGTHOF myArray
+  mov rsi, 0
+  
+  call Crlf
 
-OuterLoop:
-mov r15, rcx ; save outerlooop counter
-mov rcx, Lengthof Array
-dec rcx
-mov rsi, 0
-	innerLoop:
-	mov r9, Array[rsi * 8]
-	mov r11, rsi
-	inc r11
-	mov r10, Array[r11 * 8]
-	cmp r9, r10
-	jle ENDLOOP
+  L2:
+    mov rax, myArray[rsi]
+    call WriteInt64
+    add rsi, 8
+  LOOP L2
+ 
+ call ReadInt64
 
-	SWAP:
-		mov r13, r9
-		mov Array[rsi * 8], r10
-		mov Array[(rsi * 8) + 8], r13
-
-	ENDLOOP:
-	inc rsi
-	Loop innerLoop
-mov rcx, r15
-Loop OuterLoop
-
-mov rcx, lengthof Array
-mov rsi, 0
-finaloop:
-	mov rax, Array[rsi * 8]
-	call WriteInt64
-	inc rsi
-loop finaloop
-
-call ReadInt64
-
-call ExitProcess
-main endp
-end
+ main endp
+ end
