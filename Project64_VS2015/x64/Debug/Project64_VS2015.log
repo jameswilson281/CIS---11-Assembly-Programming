@@ -1,3 +1,17 @@
 ﻿  Assembling main.asm...
-  Project64_VS2015.vcxproj -> C:\Users\ncc\CIS---11-Assembly-Programming\Project64_VS2015\x64\Debug\Project.exe
-  Project64_VS2015.vcxproj -> C:\Users\ncc\CIS---11-Assembly-Programming\Project64_VS2015\x64\Debug\Project.pdb (Full PDB)
+main.asm(1): error A2008: syntax error : process
+main.asm(5): error A2008: syntax error : array
+main.asm(49): error A2008: syntax error : LOOP
+main.asm(60): error A2008: syntax error : endp
+main.asm(60): error A2088: END directive required at end of file
+main.asm(13): error A2006: undefined symbol : myArray
+main.asm(20): error A2006: undefined symbol : myArray
+main.asm(27): error A2006: undefined symbol : myArray
+main.asm(30): error A2006: undefined symbol : myArray
+main.asm(36): error A2006: undefined symbol : myArray
+main.asm(39): error A2006: undefined symbol : myArray
+main.asm(41): error A2006: undefined symbol : ENDLOOP
+main.asm(46): error A2006: undefined symbol : myArray
+main.asm(47): error A2006: undefined symbol : myArray
+main.asm(58): error A2006: undefined symbol : ExitProcess
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\BuildCustomizations\masm.targets(69,5): error MSB3721: The command "ml64.exe /c /nologo /Zi /Fo"x64\Debug\main.obj" /Fl"Project.lst" /I "c:\Irvine" /W3 /errorReport:prompt  /Tamain.asm" exited with code 1.

@@ -1,26 +1,83 @@
-Microsoft (R) Macro Assembler (x64) Version 14.00.23506.0   03/05/18 11:03:54
+Microsoft (R) Macro Assembler (x64) Version 14.14.26430.0   06/03/18 19:58:41
 main.asm						     Page 1 - 1
 
 
-				; AddTwoSum_64.asm - Chapter 3 example.
-
-				ExitProcess proto
+				Exit process Proto
+main.asm(1) : error A2008:syntax error : process
+				Crlf       proto
+				WriteInt64    proto
  00000000			.data
- 00000000			sum qword 0
-	   0000000000000000
- 00000000			.code
+				my array QWORD 5, 1, 4, 2, 8
+main.asm(5) : error A2008:syntax error : array
+
+ 00000000			.code 
  00000000			main proc
- 00000000  B8 00000005		   mov  eax,5
- 00000005  BB 00000006		   mov  ebx,6   
-				   ;
- 0000000A  8B C8		   mov  ecx,eax
- 0000000C  8B C3		   mov  eax,ebx
- 0000000E  8B D9		   mov  ebx,ecx
-				   ;
- 00000010  E8 00000000 E	   call ExitProcess
- 00000015			main endp
-				end
-Microsoft (R) Macro Assembler (x64) Version 14.00.23506.0   03/05/18 11:03:54
+
+
+				;print array
+
+				mov rcx, LENGTHOF  myArray
+main.asm(13) : error A2006:undefined symbol : myArray
+ 00000000  48/ C7 C6		mov rsi, 0
+	   00000000
+
+
+
+
+ 00000012			LOOOP:
+				mov rax, myArray[rsi * 8] ;call write64 prints out the value in rax
+main.asm(20) : error A2006:undefined symbol : myArray
+ 00000012  E8 00000000 E	call WriteInt64
+ 00000017  48/ FF C6		inc rsi
+
+ 0000001A  E2 F6		LOOP LOOOP
+ 0000001C  E8 00000000 E	call Crlf
+
+				mov rcx,LENGTHOF myArray
+main.asm(27) : error A2006:undefined symbol : myArray
+ 00000037			OUTERLOOP:
+ 00000037  4C/ 8B F9			mov r15,rcx
+					mov rcx,LENGTHOF myArray
+main.asm(30) : error A2006:undefined symbol : myArray
+ 0000003A  48/ FF C9			dec rcx
+ 0000003D  48/ C7 C6			mov rsi, 0
+	   00000000
+
+
+ 0000004F				INNERLOOP:
+						mov r9 , myArray[rsi * 8]
+main.asm(36) : error A2006:undefined symbol : myArray
+ 0000004F  4C/ 8B DE				mov r11, rsi
+ 00000052  49/ FF C3				inc r11
+						mov r10, myArray[r11 * 8]
+main.asm(39) : error A2006:undefined symbol : myArray
+ 00000055  4D/ 3B CA				cmp r9, r10
+						jle ENDLOOP ;if r9 is less than or equal to 10 it jumps
+main.asm(41) : error A2006:undefined symbol : ENDLOOP
+
+
+ 00000077				SWAP:
+ 00000077  4D/ 8B E9					mov r13, r9
+							mov myArray[r11 * 8], r10
+main.asm(46) : error A2006:undefined symbol : myArray
+							mov myArray[r11 * 8], r13
+main.asm(47) : error A2006:undefined symbol : myArray
+						
+						END LOOP:
+main.asm(49) : error A2008:syntax error : LOOP
+ 0000007A  48/ FF C6				inc rsi
+ 0000007D  E2 D0			LOOP INNERLOOP
+ 0000007F  49/ 8B CF			mov rcx,r15
+ 00000082  E2 B3		LOOP OUTERLOOP
+
+
+
+
+				call ExitProcess
+main.asm(58) : error A2006:undefined symbol : ExitProcess
+ 00000084			main endp
+				endp
+Microsoft (R) Macro Assembler (x64) Version 14.14.26430.0   06/03/18 19:58:41
 main.asm						     Symbols 2 - 1
 
 
@@ -30,15 +87,19 @@ Procedures, parameters, and locals:
 
                 N a m e                 Type     Value    Attr
 
-ExitProcess  . . . . . . . . . .	P 	 00000000 Length= 00000000 External
-main . . . . . . . . . . . . . .	P 	 00000000 _TEXT	Length= 00000015 Public
+Crlf . . . . . . . . . . . . . .	P 	 00000000 Length= 00000000 External
+WriteInt64 . . . . . . . . . . .	P 	 00000000 Length= 00000000 External
+main . . . . . . . . . . . . . .	P 	 00000000 _TEXT	Length= 000000A5 Public
+  LOOOP  . . . . . . . . . . . .	L 	 00000012 _TEXT	
+  OUTERLOOP  . . . . . . . . . .	L 	 00000037 _TEXT	
+  INNERLOOP  . . . . . . . . . .	L 	 0000004F _TEXT	
+  SWAP . . . . . . . . . . . . .	L 	 00000077 _TEXT	
 
 
 Symbols:
 
                 N a m e                 Type     Value    Attr
 
-sum  . . . . . . . . . . . . . .	QWord	 00000000 _DATA	
 
 	   0 Warnings
-	   0 Errors
+	   15 Errors
